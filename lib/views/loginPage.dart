@@ -20,40 +20,52 @@ class LoginPage extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
+          // Texto y logo que no se moverán
+          Positioned(
+            top: 200,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                const Text(
+                  '¡Bienvenido!',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Color(0xFF1289D4),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Image.asset(
+                  'assets/Logo.png',
+                  height: 100,
+                ),
+              ],
+            ),
+          ),
           Center(
             child: SingleChildScrollView(
+              padding: const EdgeInsets.only(top: 400),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 0.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const SizedBox(height: 50), // Ajustar altura para bajar los elementos
-                    const Text(
-                      '¡Bienvenido!',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Color(0xFF1289D4),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Image.asset(
-                      'assets/Logo.png',
-                      height: 100,
-                    ),
-                    const SizedBox(height: 50),
                     Container(
-                      width: double.infinity, // Ocupa todo el ancho disponible
-                      padding: const EdgeInsets.all(15.0),
+                      width: double.maxFinite,
+                      padding: const EdgeInsets.all(19.0),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(12.0),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(20.0),
+                          topRight: Radius.circular(20.0),
+                        ),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.4),
-                            spreadRadius: 2,
+                            spreadRadius: -1,
                             blurRadius: 5,
-                            offset: Offset(0, 3),
+                            offset: const Offset(0, -9),
                           ),
                         ],
                       ),
@@ -66,6 +78,7 @@ class LoginPage extends StatelessWidget {
                               style: TextStyle(
                                 color: Colors.grey[700],
                                 fontWeight: FontWeight.bold,
+                                fontSize: 15,
                               ),
                             ),
                           ),
@@ -79,7 +92,7 @@ class LoginPage extends StatelessWidget {
                                   color: Colors.grey.withOpacity(0.3),
                                   spreadRadius: 2,
                                   blurRadius: 5,
-                                  offset: Offset(0, 3),
+                                  offset: const Offset(0, 3),
                                 ),
                               ],
                             ),
@@ -95,7 +108,7 @@ class LoginPage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8.0),
                                   borderSide: BorderSide.none,
                                 ),
-                                contentPadding: EdgeInsets.symmetric(
+                                contentPadding: const EdgeInsets.symmetric(
                                   vertical: 16.0,
                                   horizontal: 16.0,
                                 ),
@@ -110,6 +123,7 @@ class LoginPage extends StatelessWidget {
                               style: TextStyle(
                                 color: Colors.grey[700],
                                 fontWeight: FontWeight.bold,
+                                fontSize: 15,
                               ),
                             ),
                           ),
@@ -123,7 +137,7 @@ class LoginPage extends StatelessWidget {
                                   color: Colors.grey.withOpacity(0.3),
                                   spreadRadius: 2,
                                   blurRadius: 5,
-                                  offset: Offset(0, 3),
+                                  offset: const Offset(0, 3),
                                 ),
                               ],
                             ),
@@ -137,14 +151,14 @@ class LoginPage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8.0),
                                   borderSide: BorderSide.none,
                                 ),
-                                contentPadding: EdgeInsets.symmetric(
+                                contentPadding: const EdgeInsets.symmetric(
                                   vertical: 16.0,
                                   horizontal: 16.0,
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 36),
+                          const SizedBox(height: 50),
                           Align(
                             alignment: Alignment.center,
                             child: TextButton(
