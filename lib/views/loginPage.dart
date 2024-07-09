@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_inventary_mobile/views/homePage.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -180,6 +181,10 @@ class LoginPage extends StatelessWidget {
                             child: ElevatedButton(
                               onPressed: () {
                                 // Acción para iniciar sesión
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => HomePage()),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF1289D4),

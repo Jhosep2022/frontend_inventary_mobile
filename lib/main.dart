@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_inventary_mobile/state/movements_state.dart';
 import 'package:frontend_inventary_mobile/views/loginPage.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => MovementsState()),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: LoginPage(),
+        debugShowCheckedModeBanner: false, // Add this line to remove the red debug banner
       ),
-      home: const LoginPage(),
     );
   }
 }
+
