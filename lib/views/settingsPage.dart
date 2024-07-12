@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/settingsItem.dart';
+import 'package:frontend_inventary_mobile/views/historical_clientsPage.dart';
 import 'package:frontend_inventary_mobile/views/movementsPage.dart';
 import 'package:frontend_inventary_mobile/views/stadisticPage.dart';
 import 'package:frontend_inventary_mobile/views/subscriptionPage.dart';
+import 'package:frontend_inventary_mobile/views/usersPAge.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -85,18 +87,24 @@ class SettingsPage extends StatelessWidget {
                   );
                 },
                 ),
-              SettingsItem(
+                SettingsItem(
                 title: 'Historial de clientes',
                 onTap: () {
-                  // Navegar a la pantalla de Historial de clientes
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Historical_clientsPage()),
+                  );
                 },
-              ),
-              SettingsItem(
+                ),
+                SettingsItem(
                 title: 'Usuarios',
                 onTap: () {
-                  // Navegar a la pantalla de Usuarios
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UsersPage()),
+                  );
                 },
-              ),
+                ),
               SettingsItem(
                 title: 'Configuración',
                 onTap: () {

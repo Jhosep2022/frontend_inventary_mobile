@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/headerComponent.dart';
+import 'package:frontend_inventary_mobile/views/orderDetailPage.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -135,17 +136,17 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   // Agregar filas de ejemplo
-                  _buildOrderRow('123456', 'Recibida', Color(0xFF6289EC)),
+                  _buildOrderRow(context, '123456', 'Recibida', const Color(0xFF6289EC)),
                   const Divider(),
-                  _buildOrderRow('123457', 'Ubicando productos', Colors.yellow),
+                  _buildOrderRow(context, '123457', 'Ubicando productos', Colors.yellow),
                   const Divider(),
-                  _buildOrderRow('123458', 'En espera', Colors.grey),
+                  _buildOrderRow(context, '123458', 'En espera', Colors.grey),
                   const Divider(),
-                  _buildOrderRow('123459', 'Cancelada', Colors.red),
+                  _buildOrderRow(context, '123459', 'Cancelada', Colors.red),
                   const Divider(),
-                  _buildOrderRow('123460', 'Finalizada', Colors.green),
+                  _buildOrderRow(context, '123460', 'Finalizada', Colors.green),
                   const Divider(),
-                  _buildOrderRow('123461', 'Back order', Colors.purple),
+                  _buildOrderRow(context, '123461', 'Back order', Colors.purple),
                   const Divider(),
                 ],
               ),
@@ -157,7 +158,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderRow(String orderNumber, String status, Color color) {
+  Widget _buildOrderRow(BuildContext context, String orderNumber, String status, Color color) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -184,7 +185,12 @@ class HomePage extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const OrderDetailPage()),
+              );
+            },
             child: Column(
               children: [
                 const Text(

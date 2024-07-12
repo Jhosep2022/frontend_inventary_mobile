@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_inventary_mobile/views/homePage.dart';
+import 'package:frontend_inventary_mobile/views/mainMenuPage.dart';
 import 'package:frontend_inventary_mobile/views/settingsPage.dart';
 
 class FooterComponent extends StatelessWidget {
@@ -30,7 +32,12 @@ class FooterComponent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                },
                 icon: const Icon(
                   Icons.home,
                   color: Colors.blue,
@@ -54,11 +61,11 @@ class FooterComponent extends StatelessWidget {
                   size: 30,
                 ),
               ),
-                IconButton(
+              IconButton(
                 onPressed: () {
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingsPage()),
                   );
                 },
                 icon: const Icon(
@@ -66,22 +73,27 @@ class FooterComponent extends StatelessWidget {
                   color: Colors.grey,
                   size: 30,
                 ),
-                ),
+              ),
             ],
           ),
         ),
         Positioned(
           top: -28, // Elevar el botón flotante
-          left: MediaQuery.of(context).size.width / 2 - 28, // Centrar horizontalmente
-            child: FloatingActionButton(
-              onPressed: () {},
-              backgroundColor: Colors.blue, // Set the button color to blue
-              child: const Icon(
-                Icons.add_circle_outline,
-                size: 40,
-                color: Colors.white,
-              ),
+          left: MediaQuery.of(context).size.width / 2 -
+              28, // Centrar horizontalmente
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MainMenuPage())
+              );
+            },
+            backgroundColor: Colors.blue, // Set the button color to blue
+            child: const Icon(
+              Icons.add_circle_outline,
+              size: 40,
+              color: Colors.white,
             ),
+          ),
         ),
       ],
     );

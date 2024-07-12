@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_inventary_mobile/state/movements_state.dart';
+import 'package:frontend_inventary_mobile/state/registered_product_state.dart';
 import 'package:frontend_inventary_mobile/views/loginPage.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MovementsState()),
+        ChangeNotifierProvider(create: (_) => RegisteredProductState())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
