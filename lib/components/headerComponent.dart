@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_inventary_mobile/views/loginPage.dart';
 
 class HeaderComponent extends StatelessWidget {
   const HeaderComponent({super.key});
@@ -25,10 +26,18 @@ class HeaderComponent extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Image.asset(
-            'assets/Logo.png',
-            height: 40,
-          ),
+            GestureDetector(
+            onTap: () {
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            },
+            child: Image.asset(
+              'assets/Logo.png',
+              height: 40,
+            ),
+            ),
           IconButton(
             onPressed: (){}, 
             icon: const Icon(

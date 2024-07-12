@@ -46,7 +46,7 @@ class SubscriptionPage extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: 16.0,
                 mainAxisSpacing: 16.0,
-                childAspectRatio: 0.78,
+                childAspectRatio: 0.70,
                 children: const [
                   SubscriptionCard(
                     icon: Icons.lock,

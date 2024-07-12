@@ -75,10 +75,10 @@ class MovementsPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(width: 18),
+                    
                     IconButton(
                       icon: Icon(Icons.arrow_drop_down_circle_outlined,
-                          color: Colors.blue, size: 30),
+                          color: Colors.blue, size: 25),
                       onPressed: () {
                         context
                             .read<MovementsState>()
@@ -107,7 +107,7 @@ class MovementsPage extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 16),
+          
           ElevatedButton(
             onPressed: () {
               // Acción al presionar el botón de aplicar filtro

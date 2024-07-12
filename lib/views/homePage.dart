@@ -39,46 +39,49 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            elevation: 5,
                           ),
-                          elevation: 5,
-                        ),
-                        child: const Text(
-                          'Órdenes de ingreso',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          elevation: 5,
-                        ),
-                        child: const Text(
-                          'Pedidos por surtir',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
+                          child: const Text(
+                            'Órdenes de ingreso',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 8), // Añadir un espacio entre los botones
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            elevation: 5,
+                          ),
+                          child: const Text(
+                            'Pedidos por surtir',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -101,7 +104,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
-              constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+              // constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height),
               child: Column(
                 children: [
                   const Row(
