@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/headerComponent.dart';
-import 'package:frontend_inventary_mobile/views/orderTrackingPage.dart';
+import 'package:frontend_inventary_mobile/views/kitAssignmentPage.dart';
 import 'package:frontend_inventary_mobile/views/productEntryPage.dart';
 
-class ProductAssignmentPage extends StatefulWidget {
-  const ProductAssignmentPage({super.key});
+class KitsDetailPage extends StatelessWidget {
+  final String title;
+  final String description;
 
-  @override
-  _ProductAssignmentPageState createState() => _ProductAssignmentPageState();
-}
-
-class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
-  bool assignToOneUser = true;
-  bool assignToMultipleUsers = false;
-  String? selectedUser;
-  List<String?> selectedUsersForProducts = List.filled(3, null); // Assuming you have 3 products
+  const KitsDetailPage({super.key, required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +20,10 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: const Text(
-              'Ingreso de productos',
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'Detalle del KIT',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -38,7 +31,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
               ),
             ),
           ),
-          _buildOrderSummary(),
+          const SizedBox(height: 16),
           Expanded(
             child: _buildMainContainer(context),
           ),
@@ -66,60 +59,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Checkbox(
-                value: assignToOneUser,
-                onChanged: (bool? value) {
-                  setState(() {
-                    assignToOneUser = value!;
-                    assignToMultipleUsers = !value;
-                  });
-                },
-              ),
-              const Expanded(
-                child: Text(
-                  'Asignar a un solo usuario para acomodar los productos',
-                  style: TextStyle(fontSize: 14),
-                ),
-              ),
-              Checkbox(
-                value: assignToMultipleUsers,
-                onChanged: (bool? value) {
-                  setState(() {
-                    assignToMultipleUsers = value!;
-                    assignToOneUser = !value;
-                  });
-                },
-              ),
-              const Expanded(
-                child: Text(
-                  'Asignar a varios usuarios para acomodar los productos',
-                  style: TextStyle(fontSize: 14),
-                ),
-              ),
-            ],
-          ),
-          if (assignToOneUser)
-            Container(
-              
-              child: DropdownButton<String>(
-                hint: const Text("Seleccionar"),
-                value: selectedUser,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedUser = newValue;
-                  });
-                },
-                items: <String>['Usuario 1', 'Usuario 2', 'Usuario 3']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
+          _buildOrderSummary(),
           const SizedBox(height: 16),
           const Text(
             'Listado de productos:',
@@ -138,8 +78,8 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => OrderTrackingPage()),
-                );
+                  MaterialPageRoute(builder: (context) => KitAssignmentPage()),
+                ); // Acción al presionar el botón
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
@@ -152,7 +92,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
                 ),
               ),
               child: const Text(
-                'Aceptar',
+                'Comenzar la ubicacion en almacen',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -174,31 +114,14 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
         children: [
           Row(
             children: [
-              const Text(
-                'Orden No. 123456',
-                style: TextStyle(
+              Text(
+                title,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 100),
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF6289EC),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    'Recibida',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
+              
             ],
           ),
           const SizedBox(height: 8),
@@ -227,7 +150,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
       itemBuilder: (context, index) {
         return Column(
           children: [
-            _buildProductItem(index),
+            _buildProductItem(),
             if (index < 2) const Divider(),
           ],
         );
@@ -235,7 +158,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
     );
   }
 
-  Widget _buildProductItem(int index) {
+  Widget _buildProductItem() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
@@ -279,29 +202,8 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eleifend elit non nibh molestie maximus.',
             style: TextStyle(
               fontSize: 14,
-              
             ),
           ),
-          if (assignToMultipleUsers)
-            Container(
-              
-              child: DropdownButton<String>(
-                hint: const Text("Seleccionar"),
-                value: selectedUsersForProducts[index],
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedUsersForProducts[index] = newValue;
-                  });
-                },
-                items: <String>['Usuario 1', 'Usuario 2', 'Usuario 3']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
         ],
       ),
     );

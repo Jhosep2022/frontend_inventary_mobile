@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/headerComponent.dart';
+import 'package:frontend_inventary_mobile/views/newInventoryPage.dart';
+import 'package:frontend_inventary_mobile/views/searchKitsPage.dart';
+import 'package:frontend_inventary_mobile/views/searchPage.dart';
+import 'package:frontend_inventary_mobile/views/seeInventoryPage.dart';
 
 class MainMenuPage extends StatelessWidget {
   const MainMenuPage({super.key});
@@ -33,22 +37,42 @@ class MainMenuPage extends StatelessWidget {
             _buildMenuItem(
               svgPath: 'assets/buscador.svg',
               label: 'Buscar productos',
-              onTap: () {},
+              onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchPage()),
+              );
+              },
             ),
             _buildMenuItem(
               svgPath: 'assets/lista.svg',
               label: 'Ver inventario',
-              onTap: () {},
+              onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SeeInventoryPage()),
+              );
+              },
             ),
             _buildMenuItem(
               svgPath: 'assets/kits.svg',
               label: 'Kits',
-              onTap: () {},
+              onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchKitsPage()),
+              );
+              },
             ),
             _buildMenuItem(
               svgPath: 'assets/agregarLista.svg',
               label: 'Nuevo inventario',
-              onTap: () {},
+              onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NewInventaryPage()),
+              );
+              },
             ),
           ],
         ),

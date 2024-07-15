@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_inventary_mobile/views/Employee/fillOrdersPage.dart';
 import 'package:frontend_inventary_mobile/views/homePage.dart';
 
 class LoginPage extends StatelessWidget {
@@ -183,7 +184,8 @@ class LoginPage extends StatelessWidget {
                                 // Acción para iniciar sesión
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => HomePage()),
+                                  // MaterialPageRoute(builder: (context) => HomePage()),
+                                  MaterialPageRoute(builder: (context) => FillOrdersPage()),
                                 );
                               },
                               style: ElevatedButton.styleFrom(

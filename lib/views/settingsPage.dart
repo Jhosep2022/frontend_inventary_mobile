@@ -3,6 +3,7 @@ import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/settingsItem.dart';
 import 'package:frontend_inventary_mobile/views/historical_clientsPage.dart';
 import 'package:frontend_inventary_mobile/views/movementsPage.dart';
+import 'package:frontend_inventary_mobile/views/profilePage.dart';
 import 'package:frontend_inventary_mobile/views/stadisticPage.dart';
 import 'package:frontend_inventary_mobile/views/subscriptionPage.dart';
 import 'package:frontend_inventary_mobile/views/usersPAge.dart';
@@ -46,12 +47,15 @@ class SettingsPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SettingsItem(
+                SettingsItem(
                 title: 'Perfil',
                 onTap: () {
-                  // Navegar a la pantalla de Perfil
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                  );
                 },
-              ),
+                ),
               SettingsItem(
                 title: 'Subscripción',
                 onTap: () {

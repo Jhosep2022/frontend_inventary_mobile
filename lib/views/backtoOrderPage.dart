@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/headerComponent.dart';
-import 'package:frontend_inventary_mobile/views/orderTrackingPage.dart';
 import 'package:frontend_inventary_mobile/views/productEntryPage.dart';
 
-class ProductAssignmentPage extends StatefulWidget {
-  const ProductAssignmentPage({super.key});
-
-  @override
-  _ProductAssignmentPageState createState() => _ProductAssignmentPageState();
-}
-
-class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
-  bool assignToOneUser = true;
-  bool assignToMultipleUsers = false;
-  String? selectedUser;
-  List<String?> selectedUsersForProducts = List.filled(3, null); // Assuming you have 3 products
+class BackToOrderPage extends StatelessWidget {
+  const BackToOrderPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +19,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: const Text(
-              'Ingreso de productos',
+              'Detalle de la orden',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -38,7 +27,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
               ),
             ),
           ),
-          _buildOrderSummary(),
+          const SizedBox(height: 16),
           Expanded(
             child: _buildMainContainer(context),
           ),
@@ -66,60 +55,25 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Checkbox(
-                value: assignToOneUser,
-                onChanged: (bool? value) {
-                  setState(() {
-                    assignToOneUser = value!;
-                    assignToMultipleUsers = !value;
-                  });
-                },
-              ),
-              const Expanded(
-                child: Text(
-                  'Asignar a un solo usuario para acomodar los productos',
-                  style: TextStyle(fontSize: 14),
-                ),
-              ),
-              Checkbox(
-                value: assignToMultipleUsers,
-                onChanged: (bool? value) {
-                  setState(() {
-                    assignToMultipleUsers = value!;
-                    assignToOneUser = !value;
-                  });
-                },
-              ),
-              const Expanded(
-                child: Text(
-                  'Asignar a varios usuarios para acomodar los productos',
-                  style: TextStyle(fontSize: 14),
-                ),
-              ),
-            ],
-          ),
-          if (assignToOneUser)
-            Container(
-              
-              child: DropdownButton<String>(
-                hint: const Text("Seleccionar"),
-                value: selectedUser,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedUser = newValue;
-                  });
-                },
-                items: <String>['Usuario 1', 'Usuario 2', 'Usuario 3']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
+          _buildOrderSummary(),
+          const Text(
+            'DETALLES DE CANCELACIÓN',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+            'Proin blandit quam sit amet velit aliquam varius. '
+            'Aenean in nisl finibus, dictum neque sed, euismod ligula. '
+            'Proin faucibus egestas ullamcorper.',
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 16),
           const SizedBox(height: 16),
           const Text(
             'Listado de productos:',
@@ -133,34 +87,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
             child: _buildProductList(),
           ),
           const SizedBox(height: 26),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => OrderTrackingPage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-              ),
-              child: const Text(
-                'Aceptar',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
+          
         ],
       ),
     );
@@ -181,17 +108,17 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 100),
+              const SizedBox(width: 70),
               Align(
                 alignment: Alignment.topRight,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF6289EC),
+                    color: Color(0xFF9747FF),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Text(
-                    'Recibida',
+                    'Back to Order',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -227,7 +154,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
       itemBuilder: (context, index) {
         return Column(
           children: [
-            _buildProductItem(index),
+            _buildProductItem(),
             if (index < 2) const Divider(),
           ],
         );
@@ -235,7 +162,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
     );
   }
 
-  Widget _buildProductItem(int index) {
+  Widget _buildProductItem() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
@@ -279,29 +206,8 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eleifend elit non nibh molestie maximus.',
             style: TextStyle(
               fontSize: 14,
-              
             ),
           ),
-          if (assignToMultipleUsers)
-            Container(
-              
-              child: DropdownButton<String>(
-                hint: const Text("Seleccionar"),
-                value: selectedUsersForProducts[index],
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedUsersForProducts[index] = newValue;
-                  });
-                },
-                items: <String>['Usuario 1', 'Usuario 2', 'Usuario 3']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
         ],
       ),
     );

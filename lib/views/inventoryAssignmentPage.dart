@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/headerComponent.dart';
+import 'package:frontend_inventary_mobile/views/newRegisteredInventoryPage.dart';
 import 'package:frontend_inventary_mobile/views/orderTrackingPage.dart';
 import 'package:frontend_inventary_mobile/views/productEntryPage.dart';
 
-class ProductAssignmentPage extends StatefulWidget {
-  const ProductAssignmentPage({super.key});
+class InventoryAssignmentPage extends StatefulWidget {
+  const InventoryAssignmentPage({super.key});
 
   @override
-  _ProductAssignmentPageState createState() => _ProductAssignmentPageState();
+  _InventoryAssignmentPageState createState() => _InventoryAssignmentPageState();
 }
 
-class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
+class _InventoryAssignmentPageState extends State<InventoryAssignmentPage> {
   bool assignToOneUser = true;
   bool assignToMultipleUsers = false;
   String? selectedUser;
@@ -27,17 +28,6 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: const Text(
-              'Ingreso de productos',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
-          ),
           _buildOrderSummary(),
           Expanded(
             child: _buildMainContainer(context),
@@ -138,7 +128,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => OrderTrackingPage()),
+                  MaterialPageRoute(builder: (context) => NewRegisteredInventoryPage()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -175,41 +165,17 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
           Row(
             children: [
               const Text(
-                'Orden No. 123456',
+                'Nuevo Inventario',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 100),
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF6289EC),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    'Recibida',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
           const Text(
-            'Fecha de envío: DD/MM/AAAA',
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
-          const Text(
-            'Empresa: Empresa S.A de C.V.',
+            'Fecha de creacion: DD/MM/AAAA',
             style: TextStyle(
               fontSize: 16,
             ),

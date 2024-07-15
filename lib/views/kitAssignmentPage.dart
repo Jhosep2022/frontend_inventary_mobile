@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/headerComponent.dart';
+import 'package:frontend_inventary_mobile/views/kitTrackingPage.dart';
 import 'package:frontend_inventary_mobile/views/orderTrackingPage.dart';
+import 'package:frontend_inventary_mobile/views/productAssignmentPage.dart';
 import 'package:frontend_inventary_mobile/views/productEntryPage.dart';
 
-class ProductAssignmentPage extends StatefulWidget {
-  const ProductAssignmentPage({super.key});
+class KitAssignmentPage extends StatefulWidget {
+  const KitAssignmentPage({super.key});
 
   @override
-  _ProductAssignmentPageState createState() => _ProductAssignmentPageState();
+  _KitAssignmentPageState createState() => _KitAssignmentPageState();
 }
 
-class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
+class _KitAssignmentPageState extends State<KitAssignmentPage> {
   bool assignToOneUser = true;
   bool assignToMultipleUsers = false;
   String? selectedUser;
@@ -30,7 +32,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: const Text(
-              'Ingreso de productos',
+              'Ubicacion de productos',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -138,7 +140,7 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => OrderTrackingPage()),
+                  MaterialPageRoute(builder: (context) => KitTrackingPage()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -147,8 +149,8 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
+                  horizontal: 90,
+                  vertical: 10,
                 ),
               ),
               child: const Text(
@@ -175,41 +177,23 @@ class _ProductAssignmentPageState extends State<ProductAssignmentPage> {
           Row(
             children: [
               const Text(
-                'Orden No. 123456',
+                'KIT No. 123456',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 100),
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF6289EC),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    'Recibida',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
           const Text(
-            'Fecha de envío: DD/MM/AAAA',
+            'Fecha de creación: DD/MM/AAAA',
             style: TextStyle(
               fontSize: 16,
             ),
           ),
           const Text(
-            'Empresa: Empresa S.A de C.V.',
+            'Fecha de vencimiento: DD/MM/AAAA',
             style: TextStyle(
               fontSize: 16,
             ),
