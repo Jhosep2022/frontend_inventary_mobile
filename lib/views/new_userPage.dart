@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend_inventary_mobile/state/movements_state.dart';
+import 'package:frontend_inventary_mobile/views/usersPage.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/headerSettingsComponent.dart';
@@ -147,7 +148,7 @@ class New_UserPage extends StatelessWidget {
                     const Text(
                       'Seleccione acciones permitidas: ',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -200,7 +201,12 @@ class New_UserPage extends StatelessWidget {
   Widget _buildSaveButton(BuildContext context) {
     return Center(
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => UsersPage()),
+          );
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue,
           shape: RoundedRectangleBorder(

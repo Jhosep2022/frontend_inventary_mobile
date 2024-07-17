@@ -65,69 +65,77 @@ class MovementsPage extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+                children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
                   children: [
                     const Text(
-                      'Filtrar movimientos por:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    'Filtrar movimientos por:',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    ),
+                    IconButton(
+                    icon: Icon(
+                      Icons.arrow_drop_down_circle_outlined,
+                      color: Colors.blue,
+                      size: 25,
+                    ),
+                    onPressed: () {
+                      context
+                        .read<MovementsState>()
+                        .toggleFilterVisibility();
+                    },
+                    ),
+                    ElevatedButton(
+                    onPressed: () {
+                      // Acción al presionar el botón de aplicar filtro
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      ),
+                      elevation: 5,
+                      padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 16,
                       ),
                     ),
-                    
-                    IconButton(
-                      icon: Icon(Icons.arrow_drop_down_circle_outlined,
-                          color: Colors.blue, size: 25),
-                      onPressed: () {
-                        context
-                            .read<MovementsState>()
-                            .toggleFilterVisibility();
-                      },
+                    child: const Text(
+                      'Aplicar',
+                      style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     ),
                   ],
+                  ),
                 ),
                 if (context.watch<MovementsState>().isFilterVisible) ...[
                   const SizedBox(height: 8),
                   Column(
-                    children: context
-                        .watch<MovementsState>()
-                        .filters
-                        .keys
-                        .map((String key) {
-                      return Column(
-                        children: [
-                          _buildFilterCheckbox(context, key),
-                          const Divider(height: 1),
-                        ],
-                      );
-                    }).toList(),
+                  children: context
+                    .watch<MovementsState>()
+                    .filters
+                    .keys
+                    .map((String key) {
+                    return Column(
+                    children: [
+                      _buildFilterCheckbox(context, key),
+                      const Divider(height: 1),
+                    ],
+                    );
+                  }).toList(),
                   ),
                 ],
-              ],
-            ),
-          ),
-          
-          ElevatedButton(
-            onPressed: () {
-              // Acción al presionar el botón de aplicar filtro
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                ],
               ),
-              elevation: 5,
-            ),
-            child: const Text(
-              'Aplicar',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
               ),
-            ),
-          ),
         ],
       ),
     );

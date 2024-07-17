@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_inventary_mobile/provider/selected_screen_provider.dart';
 import 'package:frontend_inventary_mobile/state/movements_state.dart';
 import 'package:frontend_inventary_mobile/state/registered_product_state.dart';
 import 'package:frontend_inventary_mobile/views/loginPage.dart';
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => MovementsState()),
-        ChangeNotifierProvider(create: (_) => RegisteredProductState())
+        ChangeNotifierProvider(create: (_) => RegisteredProductState()),
+        ChangeNotifierProvider(create: (_) => SelectedScreenProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

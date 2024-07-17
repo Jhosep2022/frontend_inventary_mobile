@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_inventary_mobile/provider/selected_screen_provider.dart';
 import 'package:frontend_inventary_mobile/views/homePage.dart';
 import 'package:frontend_inventary_mobile/views/mainMenuPage.dart';
 import 'package:frontend_inventary_mobile/views/settingsPage.dart';
+import 'package:provider/provider.dart';
 
 class FooterComponent extends StatelessWidget {
   const FooterComponent({super.key});
@@ -31,60 +33,22 @@ class FooterComponent extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                },
-                icon: const Icon(
-                  Icons.home,
-                  color: Colors.blue,
-                  size: 30,
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.inventory,
-                  color: Colors.grey,
-                  size: 30,
-                ),
-              ),
+              _buildIconButton(context, 0, Icons.home, HomePage()),
+              _buildIconButton(context, 1, Icons.inventory, null),
               const SizedBox(width: 56), // Espacio para el botón flotante
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.receipt,
-                  color: Colors.grey,
-                  size: 30,
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SettingsPage()),
-                  );
-                },
-                icon: const Icon(
-                  Icons.person_rounded,
-                  color: Colors.grey,
-                  size: 30,
-                ),
-              ),
+              _buildIconButton(context, 2, Icons.receipt, null),
+              _buildIconButton(context, 3, Icons.person_rounded, SettingsPage()),
             ],
           ),
         ),
         Positioned(
           top: -28, // Elevar el botón flotante
-          left: MediaQuery.of(context).size.width / 2 -
-              28, // Centrar horizontalmente
+          left: MediaQuery.of(context).size.width / 2 - 28, // Centrar horizontalmente
           child: FloatingActionButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MainMenuPage())
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainMenuPage()),
               );
             },
             backgroundColor: Colors.blue, // Set the button color to blue
@@ -96,6 +60,28 @@ class FooterComponent extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildIconButton(BuildContext context, int index, IconData icon, Widget? page) {
+    final selectedScreenProvider = Provider.of<SelectedScreenProvider>(context);
+    final isSelected = selectedScreenProvider.selectedScreen == index;
+
+    return IconButton(
+      onPressed: () {
+        if (page != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => page),
+          );
+        }
+        selectedScreenProvider.selectScreen(index);
+      },
+      icon: Icon(
+        icon,
+        color: isSelected ? Colors.blue : Colors.grey,
+        size: 30,
+      ),
     );
   }
 }

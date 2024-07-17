@@ -117,7 +117,7 @@ class OrderDetailPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 100),
+              const SizedBox(width: 70),
               Align(
                 alignment: Alignment.topRight,
                 child: Container(

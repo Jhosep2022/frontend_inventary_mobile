@@ -90,7 +90,7 @@ class FinishedOrderPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 100),
+              const SizedBox(width: 60),
               Align(
                 alignment: Alignment.topRight,
                 child: Container(
@@ -154,19 +154,19 @@ class FinishedOrderPage extends StatelessWidget {
               backgroundColor: Colors.white,
               side: BorderSide(color: Colors.blue),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20),
               ),
               padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-                vertical: 12,
+          horizontal: 16, // Reduced horizontal padding
+          vertical: 8, // Reduced vertical padding
               ),
               ),
               label: const Text(
               'Cargar factura',
               style: TextStyle(
-                color: Colors.blue,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+          color: Colors.blue,
+          fontSize: 14, // Reduced font size
+          fontWeight: FontWeight.bold,
               ),
               ),
               icon: Icon(
@@ -176,25 +176,25 @@ class FinishedOrderPage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Acción al presionar el botón "Descargar factura"
+          // Acción al presionar el botón "Descargar factura"
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
+          backgroundColor: Colors.green,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16, // Reduced horizontal padding
+            vertical: 8, // Reduced vertical padding
+          ),
               ),
               child: const Text(
-                'Descargar factura',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+          'Descargar factura',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14, // Reduced font size
+            fontWeight: FontWeight.bold,
+          ),
               ),
             ),
           ],

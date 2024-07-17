@@ -108,7 +108,7 @@ class BackToOrderPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 70),
+              const SizedBox(width: 40),
               Align(
                 alignment: Alignment.topRight,
                 child: Container(

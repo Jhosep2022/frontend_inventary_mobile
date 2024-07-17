@@ -106,7 +106,7 @@ class OrderCancellationPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 100),
+              const SizedBox(width: 60),
               Align(
                 alignment: Alignment.topRight,
                 child: Container(

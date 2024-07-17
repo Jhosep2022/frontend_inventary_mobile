@@ -56,6 +56,7 @@ class HomePage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             elevation: 5,
+                            padding: EdgeInsets.symmetric(horizontal: 16),
                           ),
                           child: const Text(
                             'Órdenes de ingreso',
@@ -75,6 +76,7 @@ class HomePage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             elevation: 5,
+                            padding: EdgeInsets.symmetric(horizontal: 16),
                           ),
                           child: const Text(
                             'Pedidos por surtir',

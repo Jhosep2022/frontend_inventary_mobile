@@ -11,7 +11,7 @@ class SearchKitsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(95.0),
+        preferredSize: const Size.fromHeight(100.0),
         child: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
@@ -85,14 +85,6 @@ class SearchKitsPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: const FooterComponent(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Acción al presionar el botón flotante
-        },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
