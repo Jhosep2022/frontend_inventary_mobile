@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/settingsItem.dart';
 import 'package:frontend_inventary_mobile/views/historical_clientsPage.dart';
@@ -15,24 +16,27 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ajustes', style: TextStyle(fontSize: 28),), 
+        title: const Text(
+          'Ajustes',
+          style: TextStyle(fontSize: 28),
+        ),
         elevation: 0,
         backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Colors.black), 
+        iconTheme: const IconThemeData(color: Colors.black),
         toolbarTextStyle: const TextTheme(
-          titleLarge: TextStyle( 
+          titleLarge: TextStyle(
             color: Colors.black,
             fontSize: 28,
             fontWeight: FontWeight.bold,
           ),
-        ).bodyText2,
-        titleTextStyle: const TextTheme( 
-          titleLarge: TextStyle( 
+        ).bodyMedium,
+        titleTextStyle: const TextTheme(
+          titleLarge: TextStyle(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
-        ).headline6,
+        ).titleLarge,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -47,21 +51,21 @@ class SettingsPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-                SettingsItem(
+              SettingsItem(
                 title: 'Perfil',
                 onTap: () {
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfilePage()),
                   );
                 },
-                ),
+              ),
               SettingsItem(
                 title: 'Subscripción',
                 onTap: () {
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SubscriptionPage()),
+                    context,
+                    MaterialPageRoute(builder: (context) => SubscriptionPage()),
                   );
                 },
               ),
@@ -73,42 +77,42 @@ class SettingsPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-                SettingsItem(
+              SettingsItem(
                 title: 'Estadísticas',
                 onTap: () {
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => StatisticPage()),
+                    context,
+                    MaterialPageRoute(builder: (context) => StatisticPage()),
                   );
                 },
-                ),
-                SettingsItem(
+              ),
+              SettingsItem(
                 title: 'Movimientos',
                 onTap: () {
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MovementsPage()),
+                    context,
+                    MaterialPageRoute(builder: (context) => MovementsPage()),
                   );
                 },
-                ),
-                SettingsItem(
+              ),
+              SettingsItem(
                 title: 'Historial de clientes',
                 onTap: () {
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Historical_clientsPage()),
+                    context,
+                    MaterialPageRoute(builder: (context) => Historical_clientsPage()),
                   );
                 },
-                ),
-                SettingsItem(
+              ),
+              SettingsItem(
                 title: 'Usuarios',
                 onTap: () {
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => UsersPage()),
+                    context,
+                    MaterialPageRoute(builder: (context) => UsersPage()),
                   );
                 },
-                ),
+              ),
               SettingsItem(
                 title: 'Configuración',
                 onTap: () {

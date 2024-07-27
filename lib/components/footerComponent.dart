@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend_inventary_mobile/provider/selected_screen_provider.dart';
 import 'package:frontend_inventary_mobile/views/homePage.dart';
 import 'package:frontend_inventary_mobile/views/mainMenuPage.dart';
+import 'package:frontend_inventary_mobile/views/searchPage.dart';
+import 'package:frontend_inventary_mobile/views/seeInventoryPage.dart';
 import 'package:frontend_inventary_mobile/views/settingsPage.dart';
 import 'package:provider/provider.dart';
 
@@ -34,9 +36,9 @@ class FooterComponent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildIconButton(context, 0, Icons.home, HomePage()),
-              _buildIconButton(context, 1, Icons.inventory, null),
+              _buildIconButton(context, 1, Icons.inventory, SearchPage()),
               const SizedBox(width: 56), // Espacio para el botón flotante
-              _buildIconButton(context, 2, Icons.receipt, null),
+              _buildIconButton(context, 2, Icons.receipt, SeeInventoryPage()),
               _buildIconButton(context, 3, Icons.person_rounded, SettingsPage()),
             ],
           ),

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_inventary_mobile/views/Employee/fillOrdersPage.dart';
-import 'package:frontend_inventary_mobile/views/forgotPasswordPage.dart';
-import 'package:frontend_inventary_mobile/views/homePage.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class ForgotPasswordPage extends StatelessWidget {
+  const ForgotPasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +27,6 @@ class LoginPage extends StatelessWidget {
             right: 0,
             child: Column(
               children: [
-                const Text(
-                  '¡Bienvenido!',
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Color(0xFF1289D4),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 const SizedBox(height: 16),
                 Image.asset(
                   'assets/Logo.png',
@@ -46,6 +35,7 @@ class LoginPage extends StatelessWidget {
               ],
             ),
           ),
+          
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.only(top: 400),
@@ -77,7 +67,7 @@ class LoginPage extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              'Email',
+                              'Ingresa el correo electrónico que tienes vinculado con esta cuenta',
                               style: TextStyle(
                                 color: Colors.grey[700],
                                 fontWeight: FontWeight.bold,
@@ -101,7 +91,7 @@ class LoginPage extends StatelessWidget {
                             ),
                             child: TextField(
                               decoration: InputDecoration(
-                                hintText: 'example@mail.com',
+                                hintText: 'Correo',
                                 hintStyle: TextStyle(
                                   color: Colors.grey[400],
                                 ),
@@ -119,78 +109,19 @@ class LoginPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Contraseña',
-                              style: TextStyle(
-                                color: Colors.grey[700],
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: TextField(
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                hintText: '*******',
-                                filled: true,
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  borderSide: BorderSide.none,
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 16.0,
-                                  horizontal: 16.0,
-                                ),
-                              ),
+                          Text(
+                            'Te enviaremos un correo electrónico con un código para recuperar tu cuenta',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14,
                             ),
                           ),
                           const SizedBox(height: 50),
-                            Align(
-                            alignment: Alignment.center,
-                            child: TextButton(
-                              onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-                              );
-                              },
-                              child: const Text(
-                              '¿Olvidaste tu contraseña?',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
-                              ),
-                            ),
-                            ),
-                          const SizedBox(height: 16),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-                                // Acción para iniciar sesión
-                                Navigator.push(
-                                  context,
-                                  // MaterialPageRoute(builder: (context) => HomePage()),
-                                  MaterialPageRoute(builder: (context) => FillOrdersPage()),
-                                );
+                                // Acción para recuperar contraseña
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF1289D4),
@@ -200,11 +131,24 @@ class LoginPage extends StatelessWidget {
                                 ),
                               ),
                               child: const Text(
-                                'Iniciar sesión',
+                                'Continuar',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
                                 ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextButton(
+                            onPressed: () {
+                              // Acción para ayuda adicional
+                            },
+                            child: const Text(
+                              '¿No puedes restablecer la contraseña?',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
                               ),
                             ),
                           ),
@@ -214,6 +158,18 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+            
+          ),
+          // Botón de cierre
+          Positioned(
+            top:  40,
+            right: 10,
+            child: IconButton(
+                icon: Icon(Icons.close, color: Color.fromARGB(255, 24, 158, 248), size: 36),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
           ),
         ],

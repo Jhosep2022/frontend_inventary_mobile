@@ -89,7 +89,7 @@ class SearchKitsPage extends StatelessWidget {
   }
 
   Widget _buildKitItem(BuildContext context, int index) {
-    return InkWell(
+  return InkWell(
       onTap: () {
         Navigator.push(
           context,
@@ -146,10 +146,49 @@ class SearchKitsPage extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
+              PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert, color: Colors.blue, size: 30),
-                onPressed: () {
-                  // Acción al presionar el botón de más opciones
+                onSelected: (value) {
+                  // Manejar la opción seleccionada
+                },
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem<String>(
+                      value: 'ver_mas',
+                      child: ListTile(
+                        leading: Icon(Icons.visibility),
+                        title: Text('Ver Más'),
+                      ),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'editar',
+                      child: ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('Editar'),
+                      ),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'eliminar',
+                      child: ListTile(
+                        leading: Icon(Icons.delete),
+                        title: Text('Eliminar'),
+                      ),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'duplicar',
+                      child: ListTile(
+                        leading: Icon(Icons.copy),
+                        title: Text('Duplicar'),
+                      ),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'volver_a_crear',
+                      child: ListTile(
+                        leading: Icon(Icons.refresh),
+                        title: Text('Volver a Crear'),
+                      ),
+                    ),
+                  ];
                 },
               ),
             ],
