@@ -43,7 +43,7 @@ class CombinedHeaderComponent extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      MaterialPageRoute(builder: (context) => LoginPageContainer()),
                     );
                   },
                   child: Image.asset(

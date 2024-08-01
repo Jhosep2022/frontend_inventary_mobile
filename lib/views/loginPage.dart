@@ -1,10 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_event.dart';
+import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_state.dart';
 import 'package:frontend_inventary_mobile/views/Employee/fillOrdersPage.dart';
 import 'package:frontend_inventary_mobile/views/forgotPasswordPage.dart';
-import 'package:frontend_inventary_mobile/views/homePage.dart';
+
+
+class LoginPageContainer extends StatefulWidget {
+  const LoginPageContainer({super.key});
+
+  @override
+  _LoginPageContainerState createState() => _LoginPageContainerState();
+}
+
+class _LoginPageContainerState extends State<LoginPageContainer> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LoginPage(
+      emailController: _emailController,
+      passwordController: _passwordController,
+    );
+  }
+}
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+
+  const LoginPage({
+    Key? key,
+    required this.emailController,
+    required this.passwordController,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +138,7 @@ class LoginPage extends StatelessWidget {
                               ],
                             ),
                             child: TextField(
+                              controller: emailController,
                               decoration: InputDecoration(
                                 hintText: 'example@mail.com',
                                 hintStyle: TextStyle(
@@ -145,6 +184,7 @@ class LoginPage extends StatelessWidget {
                               ],
                             ),
                             child: TextField(
+                              controller: passwordController,
                               obscureText: true,
                               decoration: InputDecoration(
                                 hintText: '*******',
@@ -162,50 +202,74 @@ class LoginPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 50),
-                            Align(
+                          Align(
                             alignment: Alignment.center,
                             child: TextButton(
                               onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
-                              );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ForgotPasswordPage()),
+                                );
                               },
                               child: const Text(
-                              '¿Olvidaste tu contraseña?',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                              ),
+                                '¿Olvidaste tu contraseña?',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
-                            ),
+                          ),
                           const SizedBox(height: 16),
                           SizedBox(
                             width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Acción para iniciar sesión
-                                Navigator.push(
-                                  context,
-                                  // MaterialPageRoute(builder: (context) => HomePage()),
-                                  MaterialPageRoute(builder: (context) => FillOrdersPage()),
+                            child: BlocConsumer<AuthBloc, AuthState>(
+                              listener: (context, state) {
+                                if (state is AuthAuthenticated) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FillOrdersPage()),
+                                  );
+                                } else if (state is AuthError) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text('Error: ${state.message}')),
+                                  );
+                                }
+                              },
+                              builder: (context, state) {
+                                if (state is AuthLoading) {
+                                  return const CircularProgressIndicator();
+                                }
+                                return ElevatedButton(
+                                  onPressed: () {
+                                    final email = emailController.text;
+                                    final password = passwordController.text;
+                                    print('Button pressed: email=$email, password=$password');
+                                    BlocProvider.of<AuthBloc>(context).add(
+                                        LoginRequested(email, password));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF1289D4),
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(10.0),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Iniciar sesión',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                    ),
+                                  ),
                                 );
                               },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF1289D4),
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                              child: const Text(
-                                'Iniciar sesión',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                ),
-                              ),
                             ),
                           ),
                         ],
