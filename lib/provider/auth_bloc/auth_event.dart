@@ -16,3 +16,4 @@ class LoginRequested extends AuthEvent {
   @override
   List<Object> get props => [email, password];
 }
+

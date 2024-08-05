@@ -4,7 +4,7 @@ abstract class AuthState extends Equatable {
   const AuthState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class AuthInitial extends AuthState {}
@@ -13,11 +13,12 @@ class AuthLoading extends AuthState {}
 
 class AuthAuthenticated extends AuthState {
   final Map<String, dynamic> user;
+  final String token;
 
-  const AuthAuthenticated(this.user);
+  const AuthAuthenticated(this.user, this.token);
 
   @override
-  List<Object> get props => [user];
+  List<Object?> get props => [user, token];
 }
 
 class AuthError extends AuthState {
@@ -26,7 +27,7 @@ class AuthError extends AuthState {
   const AuthError(this.message);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }
 
 class AuthValidationError extends AuthState {
@@ -35,5 +36,5 @@ class AuthValidationError extends AuthState {
   const AuthValidationError(this.message);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }

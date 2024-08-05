@@ -227,18 +227,13 @@ class LoginPage extends StatelessWidget {
                             width: double.infinity,
                             child: BlocConsumer<AuthBloc, AuthState>(
                               listener: (context, state) {
-                                if (state is AuthAuthenticated) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FillOrdersPage()),
-                                  );
-                                } else if (state is AuthError) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text('Error: ${state.message}')),
-                                  );
-                                }
+                              if (state is AuthAuthenticated) {
+                                Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FillOrdersPage()),
+                                );
+                              }
                               },
                               builder: (context, state) {
                                 if (state is AuthLoading) {

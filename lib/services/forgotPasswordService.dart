@@ -7,18 +7,11 @@ class ForgotPasswordService {
 
   Future<Map<String, dynamic>> sendRecoveryEmail(String email) async {
     final url = Uri.parse('$baseUrl/users/recovermail');
-    print('Request URL: $url');
-
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': email}),
     );
-
-    print('Request body: ${jsonEncode({'email': email})}');
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {

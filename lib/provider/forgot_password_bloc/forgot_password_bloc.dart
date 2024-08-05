@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/forgot_password_bloc/forgot_password_event.dart';
 import 'package:frontend_inventary_mobile/provider/forgot_password_bloc/forgot_password_state.dart';
 import 'package:frontend_inventary_mobile/services/forgotPasswordService.dart';
+import 'package:frontend_inventary_mobile/utils/toast_utils.dart';
 
 class ForgotPasswordBloc extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
   final ForgotPasswordService forgotPasswordService;
@@ -22,9 +23,11 @@ class ForgotPasswordBloc extends Bloc<ForgotPasswordEvent, ForgotPasswordState> 
     try {
       final response = await forgotPasswordService.sendRecoveryEmail(event.email);
       print('Recovery email sent: $response');
+      showSuccessToast('Email de recuperación enviado con éxito');
       emit(ForgotPasswordSuccess('Email de recuperación enviado con éxito'));
     } catch (e) {
       print('Recovery email failed: $e');
+      showErrorToast('Error al enviar el email de recuperación');
       emit(ForgotPasswordError('Error al enviar el email de recuperación'));
     }
   }
