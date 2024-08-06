@@ -11,7 +11,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc(this.authService) : super(AuthInitial()) {
     on<LoginRequested>(_onLoginRequested);
-    on<UpdateUserDetails>(_onUpdateUserDetails); // Manejando el evento de actualización de detalles del usuario
+    on<LogoutRequested>(_onLogoutRequested);
+    on<UpdateUserDetails>(_onUpdateUserDetails);
   }
 
   Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
@@ -35,7 +36,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = response['data'][0]['user'];
       final token = response['data'][0]['token'];
 
+      await _secureStorage.deleteAll();
       await _secureStorage.write(key: 'token', value: token);
+      await _secureStorage.write(key: 'userId', value: user['id'].toString());
 
       print('Login successful: $user');
       showSuccessToast('Inicio de sesión exitoso');
@@ -45,6 +48,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       showErrorToast('Por favor verifique sus usuario o contraseña');
       emit(AuthError('Por favor verifique sus usuario o contraseña'));
     }
+  }
+
+  Future<void> _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
+    await _secureStorage.deleteAll();
+    emit(AuthInitial());
   }
 
   Future<void> _onUpdateUserDetails(UpdateUserDetails event, Emitter<AuthState> emit) async {

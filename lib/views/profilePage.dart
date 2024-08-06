@@ -6,6 +6,9 @@ import 'package:frontend_inventary_mobile/provider/profile_bloc/profile_bloc.dar
 import 'package:frontend_inventary_mobile/provider/profile_bloc/profile_event.dart';
 import 'package:frontend_inventary_mobile/provider/profile_bloc/profile_state.dart';
 import 'package:frontend_inventary_mobile/utils/toast_utils.dart';
+import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_state.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
@@ -19,10 +22,18 @@ class ProfilePage extends StatelessWidget {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
   @override
   Widget build(BuildContext context) {
-    // Fetch user data when the page is loaded
-    context.read<ProfileBloc>().add(FetchUserById(17)); // Replace with the actual user ID
+    // Obtener el ID del usuario autenticado desde el almacenamiento seguro
+    _secureStorage.read(key: 'userId').then((userId) {
+      if (userId != null) {
+        // Limpiar los controladores de texto antes de cargar los nuevos datos
+        _clearTextControllers();
+        context.read<ProfileBloc>().add(FetchUserById(int.parse(userId)));
+      }
+    });
 
     return Scaffold(
       appBar: PreferredSize(
@@ -174,6 +185,16 @@ class ProfilePage extends StatelessWidget {
       ),
       bottomNavigationBar: const FooterComponent(),
     );
+  }
+
+  void _clearTextControllers() {
+    _emailController.clear();
+    _nameController.clear();
+    _firstNameController.clear();
+    _secondNameController.clear();
+    _phoneController.clear();
+    _passwordController.clear();
+    _confirmPasswordController.clear();
   }
 
   Widget _buildProfileSection() {
