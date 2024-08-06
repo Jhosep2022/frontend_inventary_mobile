@@ -17,3 +17,12 @@ class LoginRequested extends AuthEvent {
   List<Object> get props => [email, password];
 }
 
+class UpdateUserDetails extends AuthEvent {
+  final Map<String, dynamic> updatedUserDetails;
+
+  const UpdateUserDetails(this.updatedUserDetails);
+
+  @override
+  List<Object> get props => [updatedUserDetails];
+}
+

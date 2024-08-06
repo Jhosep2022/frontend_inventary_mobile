@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/headerSettingsComponent.dart';
-import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_bloc.dart';
-import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_state.dart';
 import 'package:frontend_inventary_mobile/provider/profile_bloc/profile_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/profile_bloc/profile_event.dart';
 import 'package:frontend_inventary_mobile/provider/profile_bloc/profile_state.dart';
@@ -23,6 +21,9 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Fetch user data when the page is loaded
+    context.read<ProfileBloc>().add(FetchUserById(17)); // Replace with the actual user ID
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(95.0),
@@ -35,28 +36,32 @@ class ProfilePage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: BlocConsumer<AuthBloc, AuthState>(
+        child: BlocConsumer<ProfileBloc, ProfileState>(
           listener: (context, state) {
-            if (state is AuthAuthenticated) {
+            if (state is ProfileUpdated) {
+              showSuccessToast('Datos actualizados con éxito');
+              // Emitir FetchUserById para obtener los datos actualizados
+              context.read<ProfileBloc>().add(FetchUserById(state.user['id']));
+            } else if (state is ProfileError) {
+              showErrorToast(state.message);
+            } else if (state is UserFetched) {
               _emailController.text = state.user['email'];
               _nameController.text = state.user['name'];
               _firstNameController.text = state.user['first_name'];
               _secondNameController.text = state.user['second_name'];
               _phoneController.text = state.user['phone'];
-            } else if (state is AuthError) {
-              showErrorToast(state.message);
             }
           },
           builder: (context, state) {
-            if (state is AuthAuthenticated || state is AuthLoading || state is AuthInitial) {
-              final user = (state is AuthAuthenticated) ? state.user : null;
-              if (user != null) {
-                _emailController.text = user['email'];
-                _nameController.text = user['name'];
-                _firstNameController.text = user['first_name'];
-                _secondNameController.text = user['second_name'];
-                _phoneController.text = user['phone'];
-              }
+            if (state is ProfileLoading || state is ProfileInitial) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is UserFetched || state is ProfileUpdated) {
+              final user = state is UserFetched ? state.user : (state as ProfileUpdated).user;
+              _emailController.text = user['email'];
+              _nameController.text = user['name'];
+              _firstNameController.text = user['first_name'];
+              _secondNameController.text = user['second_name'];
+              _phoneController.text = user['phone'];
 
               return Form(
                 key: _formKey,
@@ -77,10 +82,10 @@ class ProfilePage extends StatelessWidget {
                           CircleAvatar(
                             radius: 50,
                             backgroundColor: Colors.grey,
-                            backgroundImage: user != null && user['image'] != null
+                            backgroundImage: user['image'] != null
                                 ? NetworkImage(user['image'])
                                 : null,
-                            child: user == null || user['image'] == null
+                            child: user['image'] == null
                                 ? const Icon(
                                     Icons.person,
                                     size: 50,
@@ -161,8 +166,6 @@ class ProfilePage extends StatelessWidget {
                   ],
                 ),
               );
-            } else if (state is AuthLoading) {
-              return const Center(child: CircularProgressIndicator());
             } else {
               return const Center(child: Text('No estás autenticado'));
             }
@@ -238,6 +241,7 @@ class ProfilePage extends StatelessWidget {
         const SizedBox(height: 8),
         TextFormField(
           controller: _emailController,
+          enabled: false,
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

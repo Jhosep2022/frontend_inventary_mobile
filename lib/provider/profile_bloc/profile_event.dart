@@ -20,3 +20,12 @@ class UpdateUserRequested extends ProfileEvent {
   @override
   List<Object> get props => [email, name, password ?? '', firstName, secondName, phone];
 }
+
+class FetchUserById extends ProfileEvent {
+  final int id;
+
+  const FetchUserById(this.id);
+
+  @override
+  List<Object> get props => [id];
+}

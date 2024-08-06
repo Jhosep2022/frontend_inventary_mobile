@@ -11,6 +11,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc(this.authService) : super(AuthInitial()) {
     on<LoginRequested>(_onLoginRequested);
+    on<UpdateUserDetails>(_onUpdateUserDetails); // Manejando el evento de actualización de detalles del usuario
   }
 
   Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
@@ -44,5 +45,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       showErrorToast('Por favor verifique sus usuario o contraseña');
       emit(AuthError('Por favor verifique sus usuario o contraseña'));
     }
+  }
+
+  Future<void> _onUpdateUserDetails(UpdateUserDetails event, Emitter<AuthState> emit) async {
+    print('Updating global user details: ${event.updatedUserDetails}');
+    final token = await _secureStorage.read(key: 'token') ?? 'default_token';
+    emit(AuthAuthenticated(event.updatedUserDetails, token));
   }
 }

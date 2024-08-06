@@ -41,4 +41,28 @@ class ProfileService {
       throw Exception('Failed to update user. Server responded with: ${response.body}');
     }
   }
+
+  Future<Map<String, dynamic>> getUserById(int id) async {
+    final token = await _secureStorage.read(key: 'token');
+    final url = Uri.parse('$baseUrl/users/userbyid');
+
+    final Map<String, dynamic> body = {
+      'id': id,
+    };
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to fetch user. Server responded with: ${response.body}');
+    }
+  }
 }

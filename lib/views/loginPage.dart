@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_event.dart';
 import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_state.dart';
+import 'package:frontend_inventary_mobile/provider/visibility_bloc/visibility_login_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/visibility_bloc/visibility_login_event.dart';
+import 'package:frontend_inventary_mobile/provider/visibility_bloc/visibility_login_state.dart';
+import 'package:frontend_inventary_mobile/services/authService.dart';
 import 'package:frontend_inventary_mobile/views/Employee/fillOrdersPage.dart';
 import 'package:frontend_inventary_mobile/views/forgotPasswordPage.dart';
-
 
 class LoginPageContainer extends StatefulWidget {
   const LoginPageContainer({super.key});
@@ -27,12 +30,21 @@ class _LoginPageContainerState extends State<LoginPageContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return LoginPage(
-      emailController: _emailController,
-      passwordController: _passwordController,
+    final authService = AuthService(); // Asegúrate de tener un AuthService definido
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => AuthBloc(authService)),
+        BlocProvider(create: (_) => VisibilityLoginBloc()),
+      ],
+      child: LoginPage(
+        emailController: _emailController,
+        passwordController: _passwordController,
+      ),
     );
   }
 }
+
 
 class LoginPage extends StatelessWidget {
   final TextEditingController emailController;
@@ -170,36 +182,58 @@ class LoginPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: TextField(
-                              controller: passwordController,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                hintText: '*******',
-                                filled: true,
-                                fillColor: Colors.white,
-                                border: OutlineInputBorder(
+                          BlocBuilder<VisibilityLoginBloc, VisibilityLoginState>(
+                            builder: (context, state) {
+                              bool isPasswordVisible = false;
+
+                              if (state is PasswordVisibilityToggled) {
+                                isPasswordVisible = state.isVisible;
+                              }
+
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
                                   borderRadius: BorderRadius.circular(8.0),
-                                  borderSide: BorderSide.none,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.3),
+                                      spreadRadius: 2,
+                                      blurRadius: 5,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
                                 ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 16.0,
-                                  horizontal: 16.0,
+                                child: TextField(
+                                  controller: passwordController,
+                                  obscureText: !isPasswordVisible,
+                                  decoration: InputDecoration(
+                                    hintText: '*******',
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 16.0,
+                                      horizontal: 16.0,
+                                    ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        isPasswordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      onPressed: () {
+                                        context
+                                            .read<VisibilityLoginBloc>()
+                                            .add(TogglePasswordVisibility());
+                                      },
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
                           const SizedBox(height: 50),
                           Align(
@@ -227,13 +261,13 @@ class LoginPage extends StatelessWidget {
                             width: double.infinity,
                             child: BlocConsumer<AuthBloc, AuthState>(
                               listener: (context, state) {
-                              if (state is AuthAuthenticated) {
-                                Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => FillOrdersPage()),
-                                );
-                              }
+                                if (state is AuthAuthenticated) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FillOrdersPage()),
+                                  );
+                                }
                               },
                               builder: (context, state) {
                                 if (state is AuthLoading) {
@@ -243,17 +277,17 @@ class LoginPage extends StatelessWidget {
                                   onPressed: () {
                                     final email = emailController.text;
                                     final password = passwordController.text;
-                                    print('Button pressed: email=$email, password=$password');
+                                    print(
+                                        'Button pressed: email=$email, password=$password');
                                     BlocProvider.of<AuthBloc>(context).add(
                                         LoginRequested(email, password));
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF1289D4),
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10.0),
                                     ),
                                   ),
                                   child: const Text(

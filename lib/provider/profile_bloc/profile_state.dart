@@ -28,3 +28,12 @@ class ProfileError extends ProfileState {
   @override
   List<Object> get props => [message];
 }
+
+class UserFetched extends ProfileState {
+  final Map<String, dynamic> user;
+
+  const UserFetched(this.user);
+
+  @override
+  List<Object> get props => [user];
+}
