@@ -7,6 +7,7 @@ import 'package:frontend_inventary_mobile/provider/visibility_bloc/visibility_lo
 import 'package:frontend_inventary_mobile/provider/visibility_bloc/visibility_login_event.dart';
 import 'package:frontend_inventary_mobile/provider/visibility_bloc/visibility_login_state.dart';
 import 'package:frontend_inventary_mobile/services/authService.dart';
+import 'package:frontend_inventary_mobile/utils/NoSpaceInputFormatter.dart';
 import 'package:frontend_inventary_mobile/views/Employee/fillOrdersPage.dart';
 import 'package:frontend_inventary_mobile/views/forgotPasswordPage.dart';
 
@@ -44,7 +45,6 @@ class _LoginPageContainerState extends State<LoginPageContainer> {
     );
   }
 }
-
 
 class LoginPage extends StatelessWidget {
   final TextEditingController emailController;
@@ -151,6 +151,7 @@ class LoginPage extends StatelessWidget {
                             ),
                             child: TextField(
                               controller: emailController,
+                              inputFormatters: [NoSpaceInputFormatter()],
                               decoration: InputDecoration(
                                 hintText: 'example@mail.com',
                                 hintStyle: TextStyle(
@@ -205,6 +206,7 @@ class LoginPage extends StatelessWidget {
                                 ),
                                 child: TextField(
                                   controller: passwordController,
+                                  inputFormatters: [NoSpaceInputFormatter()],
                                   obscureText: !isPasswordVisible,
                                   decoration: InputDecoration(
                                     hintText: '*******',
@@ -314,3 +316,4 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
+

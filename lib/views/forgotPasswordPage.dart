@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/forgot_password_bloc/forgot_password_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/forgot_password_bloc/forgot_password_event.dart';
 import 'package:frontend_inventary_mobile/provider/forgot_password_bloc/forgot_password_state.dart';
+import 'package:frontend_inventary_mobile/utils/NoSpaceInputFormatter.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -110,6 +111,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               ),
                               child: TextFormField(
                                 controller: emailController,
+                                inputFormatters: [NoSpaceInputFormatter()],
                                 decoration: InputDecoration(
                                   hintText: 'Correo',
                                   hintStyle: TextStyle(
