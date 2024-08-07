@@ -15,20 +15,17 @@ class ForgotPasswordBloc extends Bloc<ForgotPasswordEvent, ForgotPasswordState> 
     print('SendRecoveryEmail event received with email: ${event.email}');
     
     if (event.email.isEmpty) {
-      emit(ForgotPasswordValidationError('El email es obligatorio'));
+      showErrorToast('El email es obligatorio');
       return;
     }
     
-    emit(ForgotPasswordLoading());
     try {
       final response = await forgotPasswordService.sendRecoveryEmail(event.email);
       print('Recovery email sent: $response');
       showSuccessToast('Email de recuperación enviado con éxito');
-      emit(ForgotPasswordSuccess('Email de recuperación enviado con éxito'));
     } catch (e) {
       print('Recovery email failed: $e');
       showErrorToast('Error al enviar el email de recuperación');
-      emit(ForgotPasswordError('Error al enviar el email de recuperación'));
     }
   }
 }

@@ -171,7 +171,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                         final email = emailController.text;
                                         print('Button pressed: email=$email');
                                         BlocProvider.of<ForgotPasswordBloc>(context).add(
-                                            SendRecoveryEmail(email));
+                                          SendRecoveryEmail(email));
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
