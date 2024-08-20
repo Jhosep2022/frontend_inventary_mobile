@@ -29,3 +29,5 @@ class UpdateUserDetails extends AuthEvent {
   List<Object> get props => [updatedUserDetails];
 }
 
+class AppStarted extends AuthEvent {}
+

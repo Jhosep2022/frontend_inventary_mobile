@@ -13,23 +13,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginRequested>(_onLoginRequested);
     on<LogoutRequested>(_onLogoutRequested);
     on<UpdateUserDetails>(_onUpdateUserDetails);
+    on<AppStarted>(_onAppStarted);
   }
 
-  Future<void> _onLoginRequested(LoginRequested event, Emitter<AuthState> emit) async {
-    print('LoginRequested event received with email: ${event.email} and password: ${event.password}');
-    
+  Future<void> _onLoginRequested(
+      LoginRequested event, Emitter<AuthState> emit) async {
+    print(
+        'LoginRequested event received with email: ${event.email} and password: ${event.password}');
+
     if (event.email.isEmpty) {
       emit(AuthValidationError('El email es obligatorio'));
       showErrorToast('El email es obligatorio');
       return;
     }
-    
+
     if (event.password.isEmpty) {
       emit(AuthValidationError('La contraseña es obligatoria'));
       showErrorToast('La contraseña es obligatoria');
       return;
     }
-    
+
     emit(AuthLoading());
     try {
       final response = await authService.loginUser(event.email, event.password);
@@ -50,14 +53,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
+  Future<void> _onLogoutRequested(
+      LogoutRequested event, Emitter<AuthState> emit) async {
     await _secureStorage.deleteAll();
     emit(AuthInitial());
   }
 
-  Future<void> _onUpdateUserDetails(UpdateUserDetails event, Emitter<AuthState> emit) async {
+  Future<void> _onUpdateUserDetails(
+      UpdateUserDetails event, Emitter<AuthState> emit) async {
     print('Updating global user details: ${event.updatedUserDetails}');
     final token = await _secureStorage.read(key: 'token') ?? 'default_token';
     emit(AuthAuthenticated(event.updatedUserDetails, token));
   }
+
+  Future<void> _onAppStarted(AppStarted event, Emitter<AuthState> emit) async {
+  final token = await _secureStorage.read(key: 'token');
+  final userId = await _secureStorage.read(key: 'userId');
+  
+  if (token != null && userId != null) {
+    final user = {'id': userId}; 
+    emit(AuthAuthenticated(user, token));  
+  } else {
+    emit(AuthInitial());  
+  }
+}
 }
