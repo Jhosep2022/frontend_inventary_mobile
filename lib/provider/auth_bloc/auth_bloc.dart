@@ -4,7 +4,7 @@ import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_event.dart';
 import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_state.dart';
 import 'package:frontend_inventary_mobile/services/authService.dart';
 import 'package:frontend_inventary_mobile/utils/toast_utils.dart';
-
+import 'package:jwt_decode/jwt_decode.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthService authService;
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
@@ -67,14 +67,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onAppStarted(AppStarted event, Emitter<AuthState> emit) async {
-  final token = await _secureStorage.read(key: 'token');
-  final userId = await _secureStorage.read(key: 'userId');
-  
-  if (token != null && userId != null) {
-    final user = {'id': userId}; 
-    emit(AuthAuthenticated(user, token));  
-  } else {
-    emit(AuthInitial());  
+    final token = await _secureStorage.read(key: 'token');
+    final userId = await _secureStorage.read(key: 'userId');
+
+    if (token != null && userId != null) {
+      Map<String, dynamic> payload = Jwt.parseJwt(token);
+      DateTime expirationDate = Jwt.getExpiryDate(token)!;
+
+      if (DateTime.now().isBefore(expirationDate)) {
+        final user = {'id': userId};
+        emit(AuthAuthenticated(user, token));
+      } else {
+        await _secureStorage.deleteAll();
+        emit(AuthInitial());
+      }
+    } else {
+      emit(AuthInitial());
+    }
   }
-}
 }

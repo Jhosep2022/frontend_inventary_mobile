@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/headerSettingsComponent.dart';
+import 'package:frontend_inventary_mobile/models/area.dart';
+import 'package:frontend_inventary_mobile/models/producto.dart';
 import 'package:frontend_inventary_mobile/views/newInventoryDetailPage.dart';
+import 'package:frontend_inventary_mobile/provider/products_bloc/products_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/areas_bloc/areas_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/products_bloc/products_event.dart';
+import 'package:frontend_inventary_mobile/provider/areas_bloc/areas_event.dart';
+import 'package:frontend_inventary_mobile/provider/products_bloc/products_state.dart';
+import 'package:frontend_inventary_mobile/provider/areas_bloc/areas_state.dart';
 
 class NewInventaryPage extends StatefulWidget {
   const NewInventaryPage({super.key});
@@ -13,6 +22,16 @@ class NewInventaryPage extends StatefulWidget {
 class _NewInventaryPageState extends State<NewInventaryPage> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+
+  String? _selectedArea;
+  String? _selectedProduct;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProductsBloc>().add(FetchProducts(1)); 
+    context.read<AreasBloc>().add(FetchAreas(1)); 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +61,7 @@ class _NewInventaryPageState extends State<NewInventaryPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                _buildDropdownSection('Select', 'Agregar otra área'),
+                _buildAreaDropdown(),
                 const SizedBox(height: 16),
                 const Text(
                   'Ingrese el producto',
@@ -52,7 +71,7 @@ class _NewInventaryPageState extends State<NewInventaryPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                _buildDropdownSection('Select', 'Agregar otro producto'),
+                _buildProductDropdown(),
                 const SizedBox(height: 16),
               ],
             ),
@@ -80,10 +99,10 @@ class _NewInventaryPageState extends State<NewInventaryPage> {
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NewInventoryDetailPage(),
-                  ),
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewInventoryDetailPage(),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -113,54 +132,119 @@ class _NewInventaryPageState extends State<NewInventaryPage> {
     );
   }
 
-  Widget _buildDropdownSection(String labelText, String buttonText) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        DropdownButtonFormField<String>(
+  Widget _buildAreaDropdown() {
+    return BlocBuilder<AreasBloc, AreasState>(
+      builder: (context, state) {
+        if (state is AreasLoading) {
+          return const CircularProgressIndicator();
+        } else if (state is AreasLoaded) {
+          return DropdownButtonFormField<Area>(
+            decoration: InputDecoration(
+              labelText: 'Seleccione un área',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 12.0,
+              ),
+            ),
+            isExpanded: true,
+            iconSize: 24, 
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+            ),
+            items: state.areas.map((area) {
+              return DropdownMenuItem<Area>(
+                value: area,
+                child: Text(
+                  area.name,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedArea = value?.name;
+              });
+            },
+          );
+        } else if (state is AreasError) {
+          return Text('Error al cargar áreas: ${state.message}');
+        }
+        return Container();
+      },
+    );
+  }
+
+
+  Widget _buildProductDropdown() {
+  return BlocBuilder<ProductsBloc, ProductsState>(
+    builder: (context, state) {
+      if (state is ProductsLoading) {
+        return const CircularProgressIndicator();
+      } else if (state is ProductsLoaded) {
+        print('Building product dropdown with products: ${state.products}');
+        return DropdownButtonFormField<Producto>(
           decoration: InputDecoration(
-            labelText: labelText,
+            labelText: 'Seleccione un producto',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-          ),
-          items: ['Select', 'Option 1', 'Option 2']
-              .map((e) => DropdownMenuItem(child: Text(e), value: e))
-              .toList(),
-          onChanged: (value) {},
-        ),
-        const SizedBox(height: 8),
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: () {
-              // Acción al presionar el botón "Agregar otra área" o "Agregar otro producto"
-            },
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 8,
-              ),
-              elevation: 2,
-              shadowColor: Colors.grey, // Add shadow color
-            ),
-            child: Text(
-              buttonText,
-              style: const TextStyle(
-                color: Colors.blue,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 8.0,
+              horizontal: 12.0,
             ),
           ),
-        ),
-      ],
-    );
-  }
+          isExpanded: true, 
+          iconSize: 24, 
+          style: const TextStyle(
+            fontSize: 14, 
+            color: Colors.black,
+          ),
+          items: state.products.map((product) {
+            return DropdownMenuItem<Producto>(
+              value: product,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.8, 
+                ),
+                child: Text(
+                  product.name,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _selectedProduct = value?.name;
+            });
+            print('Selected product: $_selectedProduct');
+          },
+        );
+      } else if (state is ProductsError) {
+        print('Error loading products: ${state.message}');
+        return Text('Error al cargar productos: ${state.message}');
+      }
+      return Container();
+    },
+  );
+}
+
+
 
   Widget _buildDateField(BuildContext context) {
     return TextFormField(

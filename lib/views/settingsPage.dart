@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/settingsItem.dart';
+import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_event.dart';
 import 'package:frontend_inventary_mobile/views/historical_clientsPage.dart';
+import 'package:frontend_inventary_mobile/views/loginPage.dart';
 import 'package:frontend_inventary_mobile/views/movementsPage.dart';
 import 'package:frontend_inventary_mobile/views/profilePage.dart';
 import 'package:frontend_inventary_mobile/views/stadisticPage.dart';
@@ -100,7 +104,8 @@ class SettingsPage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Historical_clientsPage()),
+                    MaterialPageRoute(
+                        builder: (context) => Historical_clientsPage()),
                   );
                 },
               ),
@@ -119,11 +124,57 @@ class SettingsPage extends StatelessWidget {
                   // Navegar a la pantalla de Configuración
                 },
               ),
+              const SizedBox(height: 16),
+              const Text(
+                'Sesion',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SettingsItem(
+                title: 'Cerrar Sesión',
+                onTap: () {
+                  _showLogoutDialog(context);
+                },
+              )
             ],
           ),
         ),
       ),
       bottomNavigationBar: const FooterComponent(),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Cerrar Sesión'),
+          content: const Text('¿Estás seguro de que deseas cerrar sesión?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Aceptar'),
+              onPressed: () {
+                BlocProvider.of<AuthBloc>(context).add(LogoutRequested());
+                Navigator.of(context).pop();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPageContainer()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -37,16 +37,26 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Future<void> _onFetchUserById(FetchUserById event, Emitter<ProfileState> emit) async {
-    emit(ProfileLoading());
-    try {
-      final response = await profileService.getUserById(event.id);
-      final user = response['data'][0];
-      print('User fetch successful: $user');
-      emit(UserFetched(user));
-    } catch (e) {
-      print('User fetch failed: $e');
-      showErrorToast(e.toString());
-      emit(ProfileError('Error al obtener los datos del usuario'));
-    }
+      emit(ProfileLoading());
+      try {
+          final response = await profileService.getUserById(event.id);
+          final user = response['data'][0]['user'];
+
+          // Aquí verifica si algunos de los campos pueden ser nulos y maneja el caso
+          emit(UserFetched({
+              'email': user['email'] ?? '',
+              'name': user['name'] ?? '',
+              'first_name': user['first_name'] ?? '',
+              'second_name': user['second_name'] ?? '',
+              'phone': user['phone'] ?? '',
+              'image': user['image'] ?? '',
+          }));
+          print('User fetch successful: $user');
+      } catch (e) {
+          print('User fetch failed: $e');
+          showErrorToast(e.toString());
+          emit(ProfileError('Error al obtener los datos del usuario'));
+      }
   }
+
 }
