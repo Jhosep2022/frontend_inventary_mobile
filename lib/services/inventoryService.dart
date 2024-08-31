@@ -120,4 +120,43 @@ class InventoryService {
       throw Exception('Failed to fetch users. Server responded with: ${response.body}');
     }
   }
+
+  Future<RespuestaProductos> searchProducts(int companyId, String param) async {
+    final token = await _secureStorage.read(key: 'token');
+    final url = Uri.parse('$baseUrl/inventories/getproductobyparam');
+
+    final Map<String, dynamic> body = {
+      'id_company': companyId.toString(),
+      'param': param,
+    };
+
+    print('Sending request to $url with body: $body and token: $token');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(body),
+    );
+
+    print('Server response status: ${response.statusCode}');
+    print('Server response body: ${response.body}');
+
+    if (response.statusCode == 200 || response.statusCode == 400) {  
+      try {
+        final data = RespuestaProductos.fromRawJson(response.body);
+        print('Productos decodificados: ${data.data}');
+        return data;
+      } catch (e) {
+        print('Error decoding products: $e');
+        throw Exception('Error decoding products.');
+      }
+    } else {
+      print('Failed to fetch products: ${response.body}');
+      throw Exception('Failed to fetch products. Server responded with: ${response.body}');
+    }
+  }
+
 }

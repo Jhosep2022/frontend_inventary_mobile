@@ -1,10 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/combinedHeaderComponent.dart';
+import 'package:frontend_inventary_mobile/provider/products_bloc/products_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/products_bloc/products_event.dart';
+import 'package:frontend_inventary_mobile/provider/products_bloc/products_state.dart';
 import 'package:frontend_inventary_mobile/views/searchDetailPage.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
+
+  @override
+  _SearchPageState createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Lanza el evento FetchProducts cuando la página se carga.
+    context.read<ProductsBloc>().add(FetchProducts(1)); // Puedes ajustar el companyId
+  }
+
+  void _onSearch() {
+    final query = _searchController.text.trim();
+    print("Search button pressed with query: $query"); // Depuración
+    if (query.isNotEmpty) {
+      context.read<ProductsBloc>().add(SearchProducts(1, query));
+      print("SearchProducts event dispatched"); // Depuración
+    } else {
+      // Si la búsqueda está vacía, vuelve a mostrar todos los productos
+      context.read<ProductsBloc>().add(FetchProducts(1));
+      print("Empty search query, fetching all products again"); // Depuración
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +55,7 @@ class SearchPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Ingrese el código/ clave / nombre / categoría',
+              'Ingrese el sku/nombre',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -48,9 +79,13 @@ class SearchPage extends StatelessWidget {
                       ],
                     ),
                     child: TextField(
+                      controller: _searchController,
                       decoration: InputDecoration(
                         hintText: 'Buscar',
-                        suffixIcon: const Icon(Icons.search, color: Colors.grey),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.search, color: Colors.grey),
+                          onPressed: _onSearch, 
+                        ),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
                       ),
@@ -82,33 +117,49 @@ class SearchPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.grey[200],
-                          child: const Icon(Icons.image, color: Colors.grey),
-                        ),
-                        title: const Text('Lorem ipsum'),
-                        subtitle: const Text('123456'),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.more_vert, color: Colors.blue, size: 30),
-                            onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                              builder: (context) => SearchDetailPage(),
+              child: BlocBuilder<ProductsBloc, ProductsState>(
+                builder: (context, state) {
+                  if (state is ProductsLoading) {
+                    print("State is ProductsLoading"); // Depuración
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is ProductsLoaded) {
+                    print("State is ProductsLoaded with ${state.products.length} products"); // Depuración
+                    return ListView.builder(
+                      itemCount: state.products.length,
+                      itemBuilder: (context, index) {
+                        final product = state.products[index];
+                        return Column(
+                          children: [
+                            ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.grey[200],
+                                child: const Icon(Icons.image, color: Colors.grey),
                               ),
-                            );
-                            },
-                        ),
-                      ),
-                      if (index < 9) const Divider(),
-                    ],
-                  );
+                              title: Text(product.name),
+                              subtitle: Text(product.sku),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.more_vert, color: Colors.blue, size: 30),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SearchDetailPage(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            if (index < state.products.length - 1) const Divider(),
+                          ],
+                        );
+                      },
+                    );
+                  } else if (state is ProductsError) {
+                    print("State is ProductsError: ${state.message}"); // Depuración
+                    return Center(child: Text('Error al cargar productos: ${state.message}'));
+                  }
+                  print("State is unknown or ProductsInitial"); // Depuración
+                  return Container();
                 },
               ),
             ),

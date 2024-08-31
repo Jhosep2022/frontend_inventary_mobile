@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/headerComponent.dart';
+import 'package:frontend_inventary_mobile/provider/user_bloc/users_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/user_bloc/users_event.dart';
+import 'package:frontend_inventary_mobile/provider/user_bloc/users_state.dart';
 import 'package:frontend_inventary_mobile/views/newRegisteredInventoryPage.dart';
-import 'package:frontend_inventary_mobile/views/orderTrackingPage.dart';
-import 'package:frontend_inventary_mobile/views/productEntryPage.dart';
 
 class InventoryAssignmentPage extends StatefulWidget {
   const InventoryAssignmentPage({super.key});
@@ -16,7 +18,13 @@ class _InventoryAssignmentPageState extends State<InventoryAssignmentPage> {
   bool assignToOneUser = true;
   bool assignToMultipleUsers = false;
   String? selectedUser;
-  List<String?> selectedUsersForProducts = List.filled(3, null); // Assuming you have 3 products
+  List<String?> selectedUsersForProducts = List.filled(3, null);
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<UsersBloc>().add(FetchUsers(1)); // Cambia '1' al id de la compañía apropiado
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +75,14 @@ class _InventoryAssignmentPageState extends State<InventoryAssignmentPage> {
                   });
                 },
               ),
+              const SizedBox(width: 8), // Espacio añadido
               const Expanded(
                 child: Text(
                   'Asignar a un solo usuario para acomodar los productos',
                   style: TextStyle(fontSize: 14),
                 ),
               ),
+              const SizedBox(width: 8), // Espacio añadido
               Checkbox(
                 value: assignToMultipleUsers,
                 onChanged: (bool? value) {
@@ -82,6 +92,7 @@ class _InventoryAssignmentPageState extends State<InventoryAssignmentPage> {
                   });
                 },
               ),
+              const SizedBox(width: 8), // Espacio añadido
               const Expanded(
                 child: Text(
                   'Asignar a varios usuarios para acomodar los productos',
@@ -90,26 +101,10 @@ class _InventoryAssignmentPageState extends State<InventoryAssignmentPage> {
               ),
             ],
           ),
-          if (assignToOneUser)
-            Container(
-              
-              child: DropdownButton<String>(
-                hint: const Text("Seleccionar"),
-                value: selectedUser,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedUser = newValue;
-                  });
-                },
-                items: <String>['Usuario 1', 'Usuario 2', 'Usuario 3']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
+          if (assignToOneUser) Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0), // Espacio añadido
+            child: _buildUserDropdown(),
+          ),
           const SizedBox(height: 16),
           const Text(
             'Listado de productos:',
@@ -156,6 +151,40 @@ class _InventoryAssignmentPageState extends State<InventoryAssignmentPage> {
     );
   }
 
+  Widget _buildUserDropdown() {
+    return BlocBuilder<UsersBloc, UsersState>(
+      builder: (context, state) {
+        if (state is UsersLoading) {
+          return const CircularProgressIndicator();
+        } else if (state is UsersLoaded) {
+          return DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              labelText: 'Seleccionar usuario',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
+            value: selectedUser,
+            items: state.users.map((user) {
+              return DropdownMenuItem<String>(
+                value: user.name,
+                child: Text(user.name),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedUser = value;
+              });
+            },
+          );
+        } else if (state is UsersError) {
+          return Text('Error al cargar usuarios: ${state.message}');
+        }
+        return Container();
+      },
+    );
+  }
+
   Widget _buildOrderSummary() {
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -175,7 +204,7 @@ class _InventoryAssignmentPageState extends State<InventoryAssignmentPage> {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Fecha de creacion: DD/MM/AAAA',
+            'Fecha de creación: DD/MM/AAAA',
             style: TextStyle(
               fontSize: 16,
             ),
@@ -245,31 +274,46 @@ class _InventoryAssignmentPageState extends State<InventoryAssignmentPage> {
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eleifend elit non nibh molestie maximus.',
             style: TextStyle(
               fontSize: 14,
-              
             ),
           ),
-          if (assignToMultipleUsers)
-            Container(
-              
-              child: DropdownButton<String>(
-                hint: const Text("Seleccionar"),
-                value: selectedUsersForProducts[index],
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedUsersForProducts[index] = newValue;
-                  });
-                },
-                items: <String>['Usuario 1', 'Usuario 2', 'Usuario 3']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
+          if (assignToMultipleUsers) Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0), // Espacio añadido
+            child: _buildProductUserDropdown(index),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildProductUserDropdown(int index) {
+    return BlocBuilder<UsersBloc, UsersState>(
+      builder: (context, state) {
+        if (state is UsersLoaded) {
+          return DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              labelText: 'Seleccionar usuario',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
+            value: selectedUsersForProducts[index],
+            items: state.users.map((user) {
+              return DropdownMenuItem<String>(
+                value: user.name,
+                child: Text(user.name),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedUsersForProducts[index] = value;
+              });
+            },
+          );
+        } else if (state is UsersError) {
+          return Text('Error al cargar usuarios: ${state.message}');
+        }
+        return Container();
+      },
     );
   }
 }

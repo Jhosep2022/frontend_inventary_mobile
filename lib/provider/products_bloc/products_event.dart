@@ -15,3 +15,14 @@ class FetchProducts extends ProductsEvent {
   @override
   List<Object> get props => [companyId];
 }
+
+
+class SearchProducts extends ProductsEvent { 
+  final int companyId;
+  final String param;
+
+  const SearchProducts(this.companyId, this.param);
+
+  @override
+  List<Object> get props => [companyId, param];
+}
