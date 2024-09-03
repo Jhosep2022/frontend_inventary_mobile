@@ -16,7 +16,6 @@ class FetchProducts extends ProductsEvent {
   List<Object> get props => [companyId];
 }
 
-
 class SearchProducts extends ProductsEvent { 
   final int companyId;
   final String param;

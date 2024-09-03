@@ -4,13 +4,13 @@ import 'package:frontend_inventary_mobile/components/footerComponent.dart';
 import 'package:frontend_inventary_mobile/components/headerSettingsComponent.dart';
 import 'package:frontend_inventary_mobile/models/area.dart';
 import 'package:frontend_inventary_mobile/models/producto.dart';
-import 'package:frontend_inventary_mobile/views/newInventoryDetailPage.dart';
 import 'package:frontend_inventary_mobile/provider/products_bloc/products_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/areas_bloc/areas_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/products_bloc/products_event.dart';
 import 'package:frontend_inventary_mobile/provider/areas_bloc/areas_event.dart';
 import 'package:frontend_inventary_mobile/provider/products_bloc/products_state.dart';
 import 'package:frontend_inventary_mobile/provider/areas_bloc/areas_state.dart';
+import 'package:frontend_inventary_mobile/views/newInventoryDetailPage.dart';
 
 class NewInventaryPage extends StatefulWidget {
   const NewInventaryPage({super.key});
@@ -23,8 +23,8 @@ class _NewInventaryPageState extends State<NewInventaryPage> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
-  String? _selectedArea;
-  String? _selectedProduct;
+  int? _selectedAreaId;  // Cambiado a int para manejar el ID
+  List<Producto> _selectedProducts = [];
 
   @override
   void initState() {
@@ -64,17 +64,19 @@ class _NewInventaryPageState extends State<NewInventaryPage> {
                 _buildAreaDropdown(),
                 const SizedBox(height: 16),
                 const Text(
-                  'Ingrese el producto',
+                  'Ingrese los productos',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 8),
-                _buildProductDropdown(),
+                _buildProductSelector(),
                 const SizedBox(height: 16),
+                _buildSelectedProductsList(),
               ],
             ),
+            const SizedBox(height: 16),
             const Text(
               '*El área y productos seleccionados serán bloqueados del inventario hasta que se finalice la actividad',
               style: TextStyle(
@@ -98,12 +100,26 @@ class _NewInventaryPageState extends State<NewInventaryPage> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NewInventoryDetailPage(),
-                    ),
-                  );
+                  if (_selectedAreaId != null && _selectedProducts.isNotEmpty && _selectedDate != null && _selectedTime != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NewInventoryDetailPage(
+                          selectedProductIds: _selectedProducts.map((product) => product.id).toList(),
+                          selectedAreaId: _selectedAreaId!,
+                          selectedDate: '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
+                          selectedTime: _selectedTime!.format(context),
+                        ),
+                      ),
+                    );
+                  } else {
+                    // Mostrar un mensaje si no se ha seleccionado un área, productos, fecha o tiempo
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Seleccione un área, productos, fecha y hora.'),
+                      ),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -171,7 +187,7 @@ class _NewInventaryPageState extends State<NewInventaryPage> {
             }).toList(),
             onChanged: (value) {
               setState(() {
-                _selectedArea = value?.name;
+                _selectedAreaId = value?.id;
               });
             },
           );
@@ -183,68 +199,103 @@ class _NewInventaryPageState extends State<NewInventaryPage> {
     );
   }
 
-
-  Widget _buildProductDropdown() {
-  return BlocBuilder<ProductsBloc, ProductsState>(
-    builder: (context, state) {
-      if (state is ProductsLoading) {
-        return const CircularProgressIndicator();
-      } else if (state is ProductsLoaded) {
-        print('Building product dropdown with products: ${state.products}');
-        return DropdownButtonFormField<Producto>(
-          decoration: InputDecoration(
-            labelText: 'Seleccione un producto',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 8.0,
-              horizontal: 12.0,
-            ),
-          ),
-          isExpanded: true, 
-          iconSize: 24, 
-          style: const TextStyle(
-            fontSize: 14, 
-            color: Colors.black,
-          ),
-          items: state.products.map((product) {
-            return DropdownMenuItem<Producto>(
-              value: product,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.8, 
+  Widget _buildProductSelector() {
+    return BlocBuilder<ProductsBloc, ProductsState>(
+      builder: (context, state) {
+        if (state is ProductsLoading) {
+          return const CircularProgressIndicator();
+        } else if (state is ProductsLoaded) {
+          return DropdownButtonHideUnderline(
+            child: DropdownButtonFormField<Producto>(
+              decoration: InputDecoration(
+                labelText: 'Seleccione productos',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(
-                  product.name,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 8.0,
+                  horizontal: 12.0,
                 ),
               ),
-            );
-          }).toList(),
-          onChanged: (value) {
+              isExpanded: true,
+              iconSize: 24, 
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black,
+              ),
+              items: state.products.map((product) {
+                return DropdownMenuItem<Producto>(
+                  value: product,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          product.name,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                      StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                          return Checkbox(
+                            value: _selectedProducts.contains(product),
+                            onChanged: (bool? selected) {
+                              setState(() {
+                                if (selected == true) {
+                                  _selectedProducts.add(product);
+                                } else {
+                                  _selectedProducts.remove(product);
+                                }
+                              });
+                              // Actualizar la pantalla principal
+                              this.setState(() {});
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+              onChanged: (value) {
+                // No es necesario manejar cambios aquí, ya que se gestiona en los checkboxes.
+              },
+              dropdownColor: Colors.white,
+              selectedItemBuilder: (context) {
+                return state.products.map<Widget>((product) {
+                  return Container();
+                }).toList();
+              },
+            ),
+          );
+        } else if (state is ProductsError) {
+          return Text('Error al cargar productos: ${state.message}');
+        }
+        return Container();
+      },
+    );
+  }
+
+  Widget _buildSelectedProductsList() {
+    return Wrap(
+      spacing: 8.0,
+      children: _selectedProducts.map((product) {
+        return Chip(
+          label: Text(product.name),
+          onDeleted: () {
             setState(() {
-              _selectedProduct = value?.name;
+              _selectedProducts.remove(product);
             });
-            print('Selected product: $_selectedProduct');
           },
         );
-      } else if (state is ProductsError) {
-        print('Error loading products: ${state.message}');
-        return Text('Error al cargar productos: ${state.message}');
-      }
-      return Container();
-    },
-  );
-}
-
-
+      }).toList(),
+    );
+  }
 
   Widget _buildDateField(BuildContext context) {
     return TextFormField(

@@ -1,5 +1,6 @@
 import 'package:frontend_inventary_mobile/environment/environment.dart';
 import 'package:frontend_inventary_mobile/models/area.dart';
+import 'package:frontend_inventary_mobile/models/inventoryRequest.dart';
 import 'package:frontend_inventary_mobile/models/producto.dart';
 import 'package:frontend_inventary_mobile/models/usuario.dart';
 import 'package:http/http.dart' as http;
@@ -159,4 +160,31 @@ class InventoryService {
     }
   }
 
+  Future<bool> uploadInventory(InventoryRequest inventoryRequest) async {
+    final token = await _secureStorage.read(key: 'token');
+    final url = Uri.parse('$baseUrl/inventories/createinventory');
+
+    print('Sending PUT request to $url with body: ${inventoryRequest.toJson()} and token: $token');
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode(inventoryRequest.toJson()),
+    );
+
+    print('Server response status: ${response.statusCode}');
+    print('Server response body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      // Aquí puedes manejar una respuesta exitosa, como analizar el JSON o devolver un estado específico.
+      return true;
+    } else {
+      // Manejar errores
+      print('Failed to upload inventory: ${response.statusCode}');
+      return false;
+    }
+  }
 }

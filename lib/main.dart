@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/InventoryBloc/inventory_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_event.dart';
 import 'package:frontend_inventary_mobile/provider/auth_bloc/auth_state.dart';
 import 'package:frontend_inventary_mobile/provider/forgot_password_bloc/forgot_password_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/products_bloc/products_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/profile_bloc/profile_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/selected_screen_provider.dart';
-import 'package:frontend_inventary_mobile/provider/products_bloc/products_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/areas_bloc/areas_bloc.dart';
 import 'package:frontend_inventary_mobile/provider/user_bloc/users_bloc.dart';
+import 'package:frontend_inventary_mobile/provider/inventory_Detail_bloc/inventory_Detail_bloc.dart';
 import 'package:frontend_inventary_mobile/services/authService.dart';
 import 'package:frontend_inventary_mobile/services/forgotPasswordService.dart';
 import 'package:frontend_inventary_mobile/services/profile_service.dart';
@@ -62,8 +64,17 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => ForgotPasswordBloc(forgotPasswordService)),
         BlocProvider(create: (context) => ProfileBloc(profileService)),
         BlocProvider(create: (context) => ProductsBloc(inventoryService)), 
-        BlocProvider(create: (context) => AreasBloc(inventoryService)), 
-        BlocProvider(create: (context) => UsersBloc(inventoryService)), // Añadir UsersBloc
+        BlocProvider(create: (context) => AreasBloc(inventoryService)),
+        BlocProvider(create: (context) => UsersBloc(inventoryService)),
+        BlocProvider(create: (context) => InventoryBloc(inventoryService)),
+        BlocProvider(create: (context) {
+          final productsBloc = BlocProvider.of<ProductsBloc>(context);
+          final areasBloc = BlocProvider.of<AreasBloc>(context);
+          return InventoryDetailBloc(
+            productsBloc: productsBloc,
+            areasBloc: areasBloc,
+          );
+        }),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -77,15 +88,12 @@ class MyApp extends StatelessWidget {
             } else if (state is AuthInitial) {
               return LoginPageContainer();  
             } else if (state is AuthError) {
-              // Opcional: Puedes manejar un estado de error aquí
               return LoginPageContainer();  
             } else {
-              // Mientras se carga, podrías mostrar una pantalla de splash o loader
               return const Center(child: CircularProgressIndicator());
             }
           },
         ),
-
         debugShowCheckedModeBanner: false,
       ),
     );
