@@ -120,10 +120,8 @@ class _SearchPageState extends State<SearchPage> {
               child: BlocBuilder<ProductsBloc, ProductsState>(
                 builder: (context, state) {
                   if (state is ProductsLoading) {
-                    print("State is ProductsLoading"); // Depuración
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is ProductsLoaded) {
-                    print("State is ProductsLoaded with ${state.products.length} products"); // Depuración
                     return ListView.builder(
                       itemCount: state.products.length,
                       itemBuilder: (context, index) {
@@ -136,7 +134,29 @@ class _SearchPageState extends State<SearchPage> {
                                 child: const Icon(Icons.image, color: Colors.grey),
                               ),
                               title: Text(product.name),
-                              subtitle: Text(product.sku),
+                              subtitle: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Sku: ',
+                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                                    ),
+                                    TextSpan(
+                                      text: '${product.sku}\t',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    TextSpan(
+                                      text: 'Total: ',
+                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                                    ),
+                                    TextSpan(
+                                      text: '${product.total}',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              
                               trailing: IconButton(
                                 icon: const Icon(Icons.more_vert, color: Colors.blue, size: 30),
                                 onPressed: () {
@@ -158,7 +178,6 @@ class _SearchPageState extends State<SearchPage> {
                     print("State is ProductsError: ${state.message}"); // Depuración
                     return Center(child: Text('Error al cargar productos: ${state.message}'));
                   }
-                  print("State is unknown or ProductsInitial"); // Depuración
                   return Container();
                 },
               ),
