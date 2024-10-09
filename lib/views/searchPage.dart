@@ -27,15 +27,17 @@ class _SearchPageState extends State<SearchPage> {
   void _onSearch() {
     final query = _searchController.text.trim();
     print("Search button pressed with query: $query"); // Depuración
+
     if (query.isNotEmpty) {
-      context.read<ProductsBloc>().add(SearchProducts(1, query));
+      context.read<ProductsBloc>().add(SearchProducts(1, query)); // Dispatch `SearchProducts` event
       print("SearchProducts event dispatched"); // Depuración
     } else {
-      // Si la búsqueda está vacía, vuelve a mostrar todos los productos
+      // Si la búsqueda está vacía, vuelve a mostrar todos los productos.
       context.read<ProductsBloc>().add(FetchProducts(1));
       print("Empty search query, fetching all products again"); // Depuración
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +86,7 @@ class _SearchPageState extends State<SearchPage> {
                         hintText: 'Buscar',
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.search, color: Colors.grey),
-                          onPressed: _onSearch, 
+                          onPressed: _onSearch,
                         ),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
@@ -121,11 +123,14 @@ class _SearchPageState extends State<SearchPage> {
                 builder: (context, state) {
                   if (state is ProductsLoading) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is ProductsLoaded) {
+                  } else if (state is ProductsLoaded || state is ProductsOfflineLoaded) {
+                    // Obtener la lista de productos desde los estados cargados
+                    final products = (state is ProductsLoaded) ? state.products : (state as ProductsOfflineLoaded).products;
+
                     return ListView.builder(
-                      itemCount: state.products.length,
+                      itemCount: products.length,
                       itemBuilder: (context, index) {
-                        final product = state.products[index];
+                        final product = products[index];
                         return Column(
                           children: [
                             ListTile(
@@ -156,7 +161,6 @@ class _SearchPageState extends State<SearchPage> {
                                   ],
                                 ),
                               ),
-                              
                               trailing: IconButton(
                                 icon: const Icon(Icons.more_vert, color: Colors.blue, size: 30),
                                 onPressed: () {
@@ -169,14 +173,34 @@ class _SearchPageState extends State<SearchPage> {
                                 },
                               ),
                             ),
-                            if (index < state.products.length - 1) const Divider(),
+                            if (index < products.length - 1) const Divider(),
                           ],
                         );
                       },
                     );
                   } else if (state is ProductsError) {
-                    print("State is ProductsError: ${state.message}"); // Depuración
-                    return Center(child: Text('Error al cargar productos: ${state.message}'));
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.error, color: Colors.red, size: 40),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Error al cargar productos: ${state.message}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 16, color: Colors.red),
+                          ),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Intentar recargar los productos cuando se produzca un error
+                              context.read<ProductsBloc>().add(FetchProducts(1));
+                            },
+                            child: const Text('Reintentar'),
+                          ),
+                        ],
+                      ),
+                    );
                   }
                   return Container();
                 },
