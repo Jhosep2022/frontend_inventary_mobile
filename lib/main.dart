@@ -21,18 +21,27 @@ import 'package:frontend_inventary_mobile/views/homePage.dart';
 import 'package:frontend_inventary_mobile/views/loginPage.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   final authService = AuthService();
   final forgotPasswordService = ForgotPasswordService();
   final profileService = ProfileService();
-  final inventoryService = InventoryService(); 
+  final inventoryService = InventoryService();
+
+  try {
+    // Verificar la creación de la base de datos antes de iniciar la aplicación.
+    await inventoryService.databaseHelper.database;
+    print("Base de datos local inicializada exitosamente.");
+  } catch (e) {
+    print("Error al inicializar la base de datos: $e");
+  }
 
   runApp(MyApp(
     authService: authService,
     forgotPasswordService: forgotPasswordService,
     profileService: profileService,
-    inventoryService: inventoryService, 
+    inventoryService: inventoryService,
   ));
 }
 
@@ -40,13 +49,13 @@ class MyApp extends StatelessWidget {
   final AuthService authService;
   final ForgotPasswordService forgotPasswordService;
   final ProfileService profileService;
-  final InventoryService inventoryService; 
+  final InventoryService inventoryService;
 
   MyApp({
     required this.authService,
     required this.forgotPasswordService,
     required this.profileService,
-    required this.inventoryService, 
+    required this.inventoryService,
   });
 
   @override
@@ -58,12 +67,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SelectedScreenProvider()),
         BlocProvider(create: (context) {
           final authBloc = AuthBloc(authService);
-          authBloc.add(AppStarted());  
+          authBloc.add(AppStarted());
           return authBloc;
         }),
         BlocProvider(create: (context) => ForgotPasswordBloc(forgotPasswordService)),
         BlocProvider(create: (context) => ProfileBloc(profileService)),
-        BlocProvider(create: (context) => ProductsBloc(inventoryService)), 
+        BlocProvider(create: (context) => ProductsBloc(inventoryService)),
         BlocProvider(create: (context) => AreasBloc(inventoryService)),
         BlocProvider(create: (context) => UsersBloc(inventoryService)),
         BlocProvider(create: (context) => InventoryBloc(inventoryService)),
@@ -84,11 +93,9 @@ class MyApp extends StatelessWidget {
         home: BlocBuilder<AuthBloc, AuthState>(
           builder: (context, state) {
             if (state is AuthAuthenticated) {
-              return HomePage();  
-            } else if (state is AuthInitial) {
-              return LoginPageContainer();  
-            } else if (state is AuthError) {
-              return LoginPageContainer();  
+              return HomePage();
+            } else if (state is AuthInitial || state is AuthError) {
+              return LoginPageContainer();
             } else {
               return const Center(child: CircularProgressIndicator());
             }

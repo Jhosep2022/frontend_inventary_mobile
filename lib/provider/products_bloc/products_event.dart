@@ -16,7 +16,8 @@ class FetchProducts extends ProductsEvent {
   List<Object> get props => [companyId];
 }
 
-class SearchProducts extends ProductsEvent { 
+
+class SearchProducts extends ProductsEvent {
   final int companyId;
   final String param;
 
@@ -25,3 +26,5 @@ class SearchProducts extends ProductsEvent {
   @override
   List<Object> get props => [companyId, param];
 }
+
+class SyncProducts extends ProductsEvent {}

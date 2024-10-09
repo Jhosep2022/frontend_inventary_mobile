@@ -21,6 +21,17 @@ class ProductsLoaded extends ProductsState {
   List<Object> get props => [products];
 }
 
+
+class ProductsOfflineLoaded extends ProductsState {
+  final List<Producto> products;
+
+  const ProductsOfflineLoaded(this.products);
+
+  @override
+  List<Object> get props => [products];
+}
+
+
 class ProductsError extends ProductsState {
   final String message;
 
@@ -29,3 +40,6 @@ class ProductsError extends ProductsState {
   @override
   List<Object> get props => [message];
 }
+
+
+class ProductsSynced extends ProductsState {}

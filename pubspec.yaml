@@ -43,7 +43,8 @@ dependencies:
   flutter_secure_storage: ^6.0.0
   jwt_decode: ^0.3.1
   intl: ^0.18.0
-
+  sqflite: ^2.4.0
+  connectivity_plus: ^6.0.5
 
 
 
